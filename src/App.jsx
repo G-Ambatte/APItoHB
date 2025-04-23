@@ -16,6 +16,7 @@ function App() {
     <div className='App'>
       <Header />
       <div>
+        <a href='https://homebrewery.naturalcrit.com/new'>The Homebrewery - New Page</a>
         <Input setData={setData} setType={setType}></Input>
         <Result data={data} type={type}></Result>
       </div>
