@@ -51,7 +51,7 @@ const monsterFormat = function(data, url) {
 	**Damage Vulnerabilities** :: ${data.damage_vulnerabilities?.length ? data.damage_vulnerabilities.join(', ') : 'None'}
 	**Damage Resistances**     :: ${data.damage_resistances?.length ? data.damage_resistances.join(', ') : 'None'}
 	**Damage Immunities**      :: ${data.damage_immunities?.length ? data.damage_immunities.join(', ') : 'None'}
-	**Condition Immunities**   :: ${data.condition_immunities?.length ? data.condition_immunities.join(', ') : 'None'}
+	**Condition Immunities**   :: ${data.condition_immunities?.length ? data.condition_immunities.map((condition_immunity)=>{return condition_immunity.name;}).join(', ') : 'None'}
 	**Senses**                 :: ${Object.keys(data.senses).map((sense)=>{return `${sense != 'passive_perception' ? sense : 'passive perception' } ${data.senses[sense]}`}).join(', ')}
 	**Languages**              :: ${data.languages}
 	**Challenge**              :: ${data.challenge_rating} (${data.xp} XP) {{bonus **Proficiency Bonus** $[signed(${data.proficiency_bonus})]}}
