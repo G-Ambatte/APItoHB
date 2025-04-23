@@ -1,0 +1,40 @@
+.result {
+	position: relative;
+	width: 100%;
+
+	.tabs {
+		position: relative;
+		top: 6px;
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: start;
+		& button {
+			border: 1px solid black;
+			margin-right: 3px;
+		}
+	}
+
+	textarea.result {
+		width: 100%;
+		min-height: 60vh;
+		max-height: 80vh;
+
+		& ~ button {
+			--color-light: #eee;
+			--color-mid: #777;
+			--color-dark: #333;
+			position: absolute;
+			top: 50px;
+			right: 20px;
+			background-color: var(--color-light);
+			border-color: var(--color-mid);
+			color: var(--color-dark);
+			transition: color 250ms linear, background-color 250ms linear;
+
+			&:hover {
+				background-color: var(--color-dark);
+				color: var(--color-light);
+			}
+		}
+	}
+}

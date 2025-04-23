@@ -1,0 +1,88 @@
+import dedent from 'dedent';
+import _ from 'lodash';
+
+const monsterRegex = /monster/i;
+
+const monsterFormat = function(data, url) {
+
+	const monsterDefaults = {
+		name: 'Unnamed Monster',
+		size: 'Any size',
+		type: 'unknown type',
+		alignment: 'unaligned',
+		armor_class: [{value: 10, type: 'unarmored'}],
+		hit_points: 1,
+		hit_points_roll: '1d1 + 0',
+		speed: { 'walk' : '30ft.' },
+		strength: 10,
+		dexterity: 10,
+		constitution: 10,
+		intelligence: 10,
+		wisdom: 10,
+		charisma: 10,
+		proficiencies: [{ proficiency: { index: 'saving-throw-TEST', name: 'TST', value: 0} }, { proficiency: { index: 'skill-TEST', name: 'skill', value: 0} }],
+		damage_vulnerabilities : [ ],
+		damage_resistance : [  ],
+		damage_immunities : [  ],
+		condition_immunities : [  ],
+		senses: { passive_perception : 10 },
+		languages : 'None',
+		challenge_rating : 0,
+		xp : 'None',
+		proficiency_bonus : 0
+	};
+
+	_.defaultsDeep(data, monsterDefaults);
+		
+	const output = dedent`{{monster,frame
+	## ${data.name}
+	*${data.size} ${data.type}, ${data.alignment}*
+	___
+	**Armor Class** :: ${data.armor_class.map((ac)=>{ return `${ac.value} (${ac.type})`; })}
+	**Hit Points**  :: ${data.hit_points} (${data.hit_points_roll})
+	**Speed**       :: ${Object.keys(data.speed).map((speed)=>{ return `${speed !== 'walk' ? speed : '' } ${data.speed[speed]}`}).join(', ')}
+	___
+	|  STR  |  DEX  |  CON  |  INT  |  WIS  |  CHA  |
+	|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
+	|${data.strength} ($[signed(${Math.floor((data.strength - 10) / 2)})])|${data.dexterity} ($[signed(${Math.floor((data.dexterity - 10) / 2)})])|${data.constitution} ($[signed(${Math.floor((data.constitution - 10) / 2)})])|${data.intelligence} ($[signed(${Math.floor((data.intelligence - 10) / 2)})])|${data.wisdom} ($[signed(${Math.floor((data.wisdom - 10) / 2)})])|${data.charisma} ($[signed(${Math.floor((data.charisma - 10) / 2)})])|
+	___
+	**Saving Throws**          :: ${data.proficiencies.filter((prof)=>{return prof.proficiency.index.startsWith('saving-throw');}).map((prof)=>{ return `${prof.proficiency.name?.slice(-3)} $[signed(${prof.value})]`;}).join(', ')}
+	**Skills**                 :: ${data.proficiencies.filter((prof)=>{return !prof.proficiency.index.startsWith('saving-throw');}).map((prof)=>{ return `${prof.proficiency.name?.slice(7)} $[signed(${prof.value})]`;}).join(', ')}
+	**Damage Vulnerabilities** :: ${data.damage_vulnerabilities?.length ? data.damage_vulnerabilities.join(', ') : 'None'}
+	**Damage Resistances**     :: ${data.damage_resistances?.length ? data.damage_resistances.join(', ') : 'None'}
+	**Damage Immunities**      :: ${data.damage_immunities?.length ? data.damage_immunities.join(', ') : 'None'}
+	**Condition Immunities**   :: ${data.condition_immunities?.length ? data.condition_immunities.join(', ') : 'None'}
+	**Senses**                 :: ${Object.keys(data.senses).map((sense)=>{return `${sense != 'passive_perception' ? sense : 'passive perception' } ${data.senses[sense]}`}).join(', ')}
+	**Languages**              :: ${data.languages}
+	**Challenge**              :: ${data.challenge_rating} (${data.xp} XP) {{bonus **Proficiency Bonus** $[signed(${data.proficiency_bonus})]}}
+	___
+
+	${data.special_abilities?.length ?
+	`### Traits
+	${data.special_abilities.map((special)=>{
+		return `***${special.name}.***${special.usage ? ` **(${special.usage.times} ${special.usage.type})**` : ''} ${special.desc}`;
+	}).join('\n:\n')
+	}`		
+	: ''
+	}
+	:
+	${data.actions?.length ? 
+	`### Actions
+	${data.actions.map((action)=>{return `***${action.name}.*** ${action.desc}`}).join('\n:\n')}`
+	: ''
+	}
+	:
+	${data.legendary_actions?.length ?
+	`### Legendary Actions
+	${data.legendary_actions.map((legendary)=>{return `***${legendary.name}.*** ${legendary.desc}`}).join('\n:\n')}`
+	 : ''}
+	}}
+
+	${data.image ? `![image](${url}${data.image})` : ''}
+	`;
+
+	return output;
+
+};
+
+export { monsterFormat, monsterRegex };

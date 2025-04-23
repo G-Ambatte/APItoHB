@@ -1,0 +1,54 @@
+import './result.css'
+
+import { useState, useEffect } from 'react'
+
+import { monsterFormat } from '../../types/monster';
+import { spellFormat } from '../../types/spell';
+import { featFormat } from '../../types/feats';
+
+function Result({ data, type }) {
+
+	const [ activeTab, setActiveTab ] = useState('homebrewery');
+	const [ text, setText ] = useState('');
+	const [ copyState, setCopyState] = useState(false);
+
+	useEffect(()=>{
+		setCopyState(false);
+	}, [data])
+
+	useEffect(()=>{
+		const url = 'https://www.dnd5eapi.co';
+
+		const outputMap = {
+			monster : monsterFormat,
+			spell   : spellFormat,
+			feat    : featFormat
+		}
+
+		if(activeTab == 'homebrewery') setText(outputMap[type] ? outputMap[type](data, url) : '');
+		if(activeTab == 'raw') setText(JSON.stringify(data));
+
+	},	[activeTab, type, data])
+
+	if(!data) return;
+
+
+	const copyToClipboard = function(){
+		navigator.clipboard.writeText(text);
+		setCopyState(true);
+	}
+
+	const tabs = [ 'Homebrewery', 'Raw'];
+
+	return <>
+		<div className='result'>
+			<div className='tabs'>
+				{tabs.map((tab, index)=>{return <button key={index} onClick={()=>{setActiveTab(tab.toLowerCase());}}>{tab}</button>})}
+			</div>
+			<textarea className='result' defaultValue={text}></textarea>
+			<button onClick={copyToClipboard}>{copyState ? 'Copied!' : 'Copy'}</button>
+		</div>
+	</>
+}
+
+export default Result
