@@ -56,24 +56,24 @@ const monsterFormat = function(data, url) {
 	**Languages**              :: ${data.languages}
 	**Challenge**              :: ${data.challenge_rating} (${data.xp} XP) {{bonus **Proficiency Bonus** $[signed(${data.proficiency_bonus})]}}
 	___
-
 	${data.special_abilities?.length ?
 	`### Traits
 	${data.special_abilities.map((special)=>{
 		return `***${special.name}.***${special.usage ? ` **(${special.usage.times} ${special.usage.type})**` : ''} ${special.desc}`;
 	}).join('\n:\n')
-	}`		
-	: ''
 	}
-	:
+	`		
+	: ''
+	}	
 	${data.actions?.length ? 
-	`### Actions
+	`:
+	### Actions
 	${data.actions.map((action)=>{return `***${action.name}.*** ${action.desc}`}).join('\n:\n')}`
 	: ''
 	}
-	:
 	${data.legendary_actions?.length ?
-	`### Legendary Actions
+	`:
+	### Legendary Actions
 	${data.legendary_actions.map((legendary)=>{return `***${legendary.name}.*** ${legendary.desc}`}).join('\n:\n')}`
 	 : ''}
 	}}
