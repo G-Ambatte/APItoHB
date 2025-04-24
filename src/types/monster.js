@@ -20,11 +20,11 @@ const monsterFormat = function(data, url) {
 		intelligence: 10,
 		wisdom: 10,
 		charisma: 10,
-		proficiencies: [{ proficiency: { index: 'saving-throw-TEST', name: 'TST', value: 0} }, { proficiency: { index: 'skill-TEST', name: 'skill', value: 0} }],
+		proficiencies: [ ],
 		damage_vulnerabilities : [ ],
-		damage_resistance : [  ],
-		damage_immunities : [  ],
-		condition_immunities : [  ],
+		damage_resistance : [ ],
+		damage_immunities : [ ],
+		condition_immunities : [ ],
 		senses: { passive_perception : 10 },
 		languages : 'None',
 		challenge_rating : 0,
@@ -46,8 +46,8 @@ const monsterFormat = function(data, url) {
 	|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 	|${data.strength} ($[signed(${Math.floor((data.strength - 10) / 2)})])|${data.dexterity} ($[signed(${Math.floor((data.dexterity - 10) / 2)})])|${data.constitution} ($[signed(${Math.floor((data.constitution - 10) / 2)})])|${data.intelligence} ($[signed(${Math.floor((data.intelligence - 10) / 2)})])|${data.wisdom} ($[signed(${Math.floor((data.wisdom - 10) / 2)})])|${data.charisma} ($[signed(${Math.floor((data.charisma - 10) / 2)})])|
 	___
-	**Saving Throws**          :: ${data.proficiencies.filter((prof)=>{return prof.proficiency.index.startsWith('saving-throw');}).map((prof)=>{ return `${prof.proficiency.name?.slice(-3)} $[signed(${prof.value})]`;}).join(', ')}
-	**Skills**                 :: ${data.proficiencies.filter((prof)=>{return !prof.proficiency.index.startsWith('saving-throw');}).map((prof)=>{ return `${prof.proficiency.name?.slice(7)} $[signed(${prof.value})]`;}).join(', ')}
+	**Saving Throws**          :: ${data.proficiencies.filter((prof)=>{return prof.proficiency.index.startsWith('saving-throw');}).map((prof)=>{ return `${prof.proficiency.name?.slice(-3)} $[signed(${prof.value})]`;}).join(', ') || 'None'}
+	**Skills**                 :: ${data.proficiencies.filter((prof)=>{return !prof.proficiency.index.startsWith('saving-throw');}).map((prof)=>{ return `${prof.proficiency.name?.slice(7)} $[signed(${prof.value})]`;}).join(', ') || 'None'}
 	**Damage Vulnerabilities** :: ${data.damage_vulnerabilities?.length ? data.damage_vulnerabilities.join(', ') : 'None'}
 	**Damage Resistances**     :: ${data.damage_resistances?.length ? data.damage_resistances.join(', ') : 'None'}
 	**Damage Immunities**      :: ${data.damage_immunities?.length ? data.damage_immunities.join(', ') : 'None'}
