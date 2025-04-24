@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { monsterFormat } from '../../types/monsters';
 import { spellFormat } from '../../types/spells';
 import { featFormat } from '../../types/feats';
+import { magicItemFormat } from '../../types/magicItems';
 
 function Result({ data, type }) {
 
@@ -21,13 +22,16 @@ function Result({ data, type }) {
 		const url = 'https://www.dnd5eapi.co';
 
 		const outputMap = {
-			monsters : monsterFormat,
-			spells   : spellFormat,
-			feats    : featFormat
+			'monsters'    : monsterFormat,
+			'spells'      : spellFormat,
+			'feats'       : featFormat,
+			'magic-items' : magicItemFormat
 		}
 
 		if(activeTab == 'homebrewery') setText(outputMap[type] ? outputMap[type](data, url) : '');
 		if(activeTab == 'raw') setText(JSON.stringify(data));
+
+		setCopyState(false);
 
 	},	[activeTab, type, data])
 
