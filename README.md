@@ -25,5 +25,5 @@ Initial pass:
 - [ ] Races
 - [ ] Classes
 	- [ ] Subclasses
-- [ ] NPCs
 - [ ] Magic Items
+- [x] ~~NPCs~~ (NPCs are include in Monster data)
