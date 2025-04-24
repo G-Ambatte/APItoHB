@@ -22,8 +22,8 @@ Initial pass:
 - [x] Monsters
 - [x] Spells
 - [x] Feats
+- [x] Magic Items
 - [ ] Races
 - [ ] Classes
-	- [ ] Subclasses
-- [ ] Magic Items
+- [ ] Subclasses
 - [x] ~~NPCs~~ (NPCs are included in Monster data)
