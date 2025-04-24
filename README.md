@@ -4,7 +4,7 @@ This project aims to provide a simple interface for fetching data from [**D&D 5e
 
 ## Instructions
 
-1. Complete the URL - to get the data from `https://www.dnd5eapi.co/api/2014/monsters/adult-black-dragon/`, you only need to enter `monsters/adult-black-dragon/`.
+1. Use the dropdowns and text entry field to complete the URL - to get the data from `https://www.dnd5eapi.co/api/2014/monsters/adult-black-dragon/`, you would select `2014`, `monsters`, and enter `adult-black-dragon`.
 
 2. Press the **Fetch** button.
 
