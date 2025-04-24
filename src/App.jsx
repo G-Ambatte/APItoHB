@@ -10,14 +10,14 @@ import Result from './components/Result/result';
 
 function App() {
   const [data, setData] = useState();
-  const [type, setType] = useState();
+  const [type, setType] = useState('monsters');
 
   return (
     <div className='App'>
       <Header />
       <div>
         <a href='https://homebrewery.naturalcrit.com/new'>The Homebrewery - New Page</a>
-        <Input setData={setData} setType={setType}></Input>
+        <Input setData={setData} type={type} setType={setType}></Input>
         <Result data={data} type={type}></Result>
       </div>
     </div>

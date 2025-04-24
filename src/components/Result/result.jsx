@@ -20,9 +20,9 @@ function Result({ data, type }) {
 		const url = 'https://www.dnd5eapi.co';
 
 		const outputMap = {
-			monster : monsterFormat,
-			spell   : spellFormat,
-			feat    : featFormat
+			monsters : monsterFormat,
+			spells   : spellFormat,
+			feats    : featFormat
 		}
 
 		if(activeTab == 'homebrewery') setText(outputMap[type] ? outputMap[type](data, url) : '');
