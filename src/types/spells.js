@@ -45,6 +45,7 @@ const spellFormat = function(data) {
 	`**At Higher Levels:** ${data.higher_level.map((upcast)=>{return upcast;}).join('  \n')}`
 	: ''
 	}
+	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
 `
 	return output;
 

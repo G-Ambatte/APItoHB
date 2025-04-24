@@ -16,7 +16,8 @@ const magicItemFormat = function(data) {
 		if(index == 0) return `*${line}*\n\n:\n`;
 		if(line.match(/\(table\)/i)) return `###### ${line}`
 		return line;
-	}).join('  \n')}  
+	}).join('  \n')}
+	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
 `
 	return output;
 

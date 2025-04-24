@@ -78,6 +78,7 @@ const monsterFormat = function(data, url) {
 	}}
 
 	${data.image ? `![image](${url}${data.image})` : ''}
+	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
 	`;
 
 	return output;

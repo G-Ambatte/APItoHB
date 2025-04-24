@@ -16,7 +16,8 @@ const featFormat = function(data) {
 	### ${data.name}
 	${data.prerequisites.length ? `*Prerequisite: ${data.prerequisites.map((prereq)=>{return `${prereq.ability_score.name} ${prereq.minimum_score}`;}).join(', ')}*` : ''}  
 	:
-	${data.desc.map((line)=>{ return line;}).join('  \n')}  
+	${data.desc.map((line)=>{ return line;}).join('  \n')}
+	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
 `
 	return output;
 

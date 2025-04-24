@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { srdAttribution } from '../types/srdAttribution';
+
 
 function Input({ setData, type, setType }) {
 
@@ -9,7 +11,8 @@ function Input({ setData, type, setType }) {
 	const years = [ '2014', '2024'];
 
 	const [ text, setText ] = useState('');
-	const [ year, setYear ] = useState('2014')
+	const [ year, setYear ] = useState('2014');
+	const [ srdAttrib, setSrdAttrib ] = useState(true);
 
 
 	const fetchData = async function(e){
@@ -28,8 +31,16 @@ function Input({ setData, type, setType }) {
 			  throw new Error(`Response status: ${response.status}`);
 			}
 		
-			const json = await response.json();
-			setData(json)
+			const apiData = await response.json();
+			if(srdAttrib){
+				const srdMap = {
+					'2014' : '5.1',
+					'2024' : '5.2'
+				}
+				apiData.srdAttrib = srdAttribution(srdMap[year]);
+			};
+
+			setData(apiData)
 			return
 		  } catch (error) {
 			console.error(error.message);
@@ -55,6 +66,15 @@ function Input({ setData, type, setType }) {
 					</p>
 				</label>
 				<input type="submit" value="Fetch"></input>
+				<label>
+					<p>
+						Include attribution?
+						<input type='checkbox' defaultChecked={srdAttrib} onChange={()=>{
+							console.log(srdAttrib);
+							setSrdAttrib(!srdAttrib);
+						}}/>
+					</p>
+				</label>
 			</form>
 		</div>
 	</>;
