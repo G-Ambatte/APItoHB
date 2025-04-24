@@ -2,8 +2,8 @@ import './result.css'
 
 import { useState, useEffect } from 'react'
 
-import { monsterFormat } from '../../types/monster';
-import { spellFormat } from '../../types/spell';
+import { monsterFormat } from '../../types/monsters';
+import { spellFormat } from '../../types/spells';
 import { featFormat } from '../../types/feats';
 
 function Result({ data, type }) {
@@ -17,6 +17,7 @@ function Result({ data, type }) {
 	}, [data])
 
 	useEffect(()=>{
+		if(!data) return;
 		const url = 'https://www.dnd5eapi.co';
 
 		const outputMap = {

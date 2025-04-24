@@ -5,7 +5,8 @@ function Input({ setData, type, setType }) {
 
 	const url = 'https://www.dnd5eapi.co/api/'
 
-	const types = [ 'monsters', 'spells', 'feats'];
+	const types = [ 'monsters', 'spells', 'feats', 'magic-items'];
+	const years = [ '2014', '2024'];
 
 	const [ text, setText ] = useState('');
 	const [ year, setYear ] = useState('2014')
@@ -43,12 +44,11 @@ function Input({ setData, type, setType }) {
 					<p>
 						{url}
 						<select onChange={(e)=>{setYear(e.target.value)}}>
-							<option>2014</option>
-							<option>2024</option>
+							{years.map((year, index)=>{ return <option key={index}>{year}</option>;})}
 						</select>
 						/
 						<select onChange={(e)=>{setType(e.target.value)}}>
-							{types.map((type)=>{ return <option>{type}</option>;})}
+							{types.map((type, index)=>{ return <option key={index}>{type}</option>;})}
 						</select>
 						/
 						<input type='text' value={text} onChange={(e)=>{setText(e.target.value)}}></input>
