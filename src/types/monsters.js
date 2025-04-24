@@ -1,7 +1,6 @@
 import dedent from 'dedent';
 import _ from 'lodash';
 
-const monsterRegex = /monster/i;
 
 const monsterFormat = function(data, url) {
 
@@ -85,4 +84,4 @@ const monsterFormat = function(data, url) {
 
 };
 
-export { monsterFormat, monsterRegex };
+export { monsterFormat };

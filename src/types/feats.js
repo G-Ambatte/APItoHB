@@ -1,7 +1,6 @@
 import dedent from 'dedent';
 import _ from 'lodash';
 
-const featRegex = /feats/i;
 
 const featFormat = function(data) {
 
@@ -24,4 +23,4 @@ const featFormat = function(data) {
 }
 
 
-export { featFormat, featRegex }
+export { featFormat }

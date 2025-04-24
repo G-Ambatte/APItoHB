@@ -1,7 +1,6 @@
 import dedent from 'dedent';
 import _ from 'lodash';
 
-const spellRegex = /spells/i;
 
 const spellFormat = function(data) {
 
@@ -51,4 +50,4 @@ const spellFormat = function(data) {
 
 }
 
-export { spellFormat, spellRegex }
+export { spellFormat }
