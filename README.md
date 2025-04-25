@@ -24,7 +24,8 @@ Formats:
 - [x] Feats
 - [x] Magic Items
 - [x] Races
-  - [ ] Traits - requires fetching additional data
+  - [x] Traits - ~~requires fetching additional data~~ solved by GraphQL
+    - [ ] Dragonborn *Draconic Ancestry*
 - [ ] Sub-Races
 - [ ] Classes
 - [ ] Subclasses
