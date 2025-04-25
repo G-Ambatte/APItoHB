@@ -180,7 +180,7 @@ ${m.srdAttrib}
 	${m.size?`***Size.*** :: ${m.size_description||m.size}`:""}
 	${m.speed?`***Speed.*** :: Your base walking speed is ${m.speed} feet.`:""}
 
-	${m.traits.length?m.traits.map(Q=>`***${Q.name}*** :: [WIP] ${Q.url}`).join(`  
+	${m.traits.length?m.traits.map(Q=>`***${Q.name}.*** :: [WIP] ${Q.url}`).join(`  
 `):""}
 	${m.language_desc?`***Languages.*** :: ${m.language_desc}`:""}
 	${m.srdAttrib?`
