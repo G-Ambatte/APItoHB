@@ -48,7 +48,7 @@ const raceFormat = function(data) {
 	${data.size ? `***Size.*** :: ${data.size_description || data.size}` : ''}
 	${data.speed ? `***Speed.*** :: Your base walking speed is ${data.speed} feet.` : ''}
 
-	${data.traits.length ? data.traits.map((trait)=>{return `***${trait.name}*** :: [WIP] ${trait.url}`}).join('  \n') : ''}
+	${data.traits.length ? data.traits.map((trait)=>{return `***${trait.name}.*** :: [WIP] ${trait.url}`}).join('  \n') : ''}
 	${data.language_desc ? `***Languages.*** :: ${data.language_desc}` : '' }
 	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
 `
