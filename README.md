@@ -18,12 +18,14 @@ This project aims to provide a simple interface for fetching data from [**D&D 5e
 
 ## Progress
 
-Initial pass:
+Formats:
 - [x] Monsters
 - [x] Spells
 - [x] Feats
-- [ ] Races
+- [x] Races
+  - [ ] Traits - requires fetching additional data
+- [ ] Sub-Races
 - [ ] Classes
-	- [ ] Subclasses
+- [ ] Sub-Classes
 - [ ] Magic Items
-- [x] ~~NPCs~~ (NPCs are included in Monster data)
+- [x] ~~NPCs~~ (NPCs are already included in Monster data)
