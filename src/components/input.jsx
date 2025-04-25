@@ -7,7 +7,7 @@ function Input({ setData, type, setType }) {
 
 	const url = 'https://www.dnd5eapi.co/api/'
 
-	const types = [ 'monsters', 'spells', 'feats', 'magic-items'];
+	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races' ];
 	const years = [ '2014', '2024'];
 
 	const [ text, setText ] = useState('');

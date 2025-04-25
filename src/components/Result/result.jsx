@@ -6,6 +6,7 @@ import { monsterFormat } from '../../types/monsters';
 import { spellFormat } from '../../types/spells';
 import { featFormat } from '../../types/feats';
 import { magicItemFormat } from '../../types/magicItems';
+import { raceFormat } from '../../types/races';
 
 function Result({ data, type }) {
 
@@ -25,7 +26,8 @@ function Result({ data, type }) {
 			'monsters'    : monsterFormat,
 			'spells'      : spellFormat,
 			'feats'       : featFormat,
-			'magic-items' : magicItemFormat
+			'magic-items' : magicItemFormat,
+			'races'       : raceFormat
 		}
 
 		if(activeTab == 'homebrewery') setText(outputMap[type] ? outputMap[type](data, url) : '');
