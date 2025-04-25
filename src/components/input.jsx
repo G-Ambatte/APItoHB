@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { raceQuery } from '../types/races';
 import { srdAttribution } from '../types/srdAttribution';
 
 
@@ -26,7 +27,19 @@ function Input({ setData, type, setType }) {
 		// console.log(dataURL);
 
 		try {
-			const response = (await fetch(dataURL));
+			let response;
+			if(type != 'races') {
+				response = await fetch(dataURL);
+			} else {
+				response = await fetch(`https://www.dnd5eapi.co/graphql/${year}`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body : JSON.stringify({
+						query     : raceQuery,
+						variables : { index : text }
+					})
+				})
+			}
 			if (!response.ok) {
 			  throw new Error(`Response status: ${response.status}`);
 			}
