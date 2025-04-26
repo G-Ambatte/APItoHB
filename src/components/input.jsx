@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 import { raceQuery } from '../types/races';
+import { spellQuery } from '../types/spells';
 import { srdAttribution } from '../types/srdAttribution';
 
 
@@ -27,15 +28,24 @@ function Input({ setData, type, setType }) {
 		// console.log(dataURL);
 
 		try {
+			const graphQLTypes = ['races', 'spells'];
+
 			let response;
-			if(type != 'races') {
+			if(!graphQLTypes.includes(type)) {
 				response = await fetch(dataURL);
 			} else {
+				console.log('GraphQL');
+
+				const queryMap = {
+					'races'  : raceQuery,
+					'spells' : spellQuery
+				}
+
 				response = await fetch(`https://www.dnd5eapi.co/graphql/${year}`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body : JSON.stringify({
-						query     : raceQuery,
+						query     : queryMap[type],
 						variables : { index : text }
 					})
 				})
@@ -83,7 +93,6 @@ function Input({ setData, type, setType }) {
 					<p>
 						Include attribution?
 						<input type='checkbox' defaultChecked={srdAttrib} onChange={()=>{
-							console.log(srdAttrib);
 							setSrdAttrib(!srdAttrib);
 						}}/>
 					</p>

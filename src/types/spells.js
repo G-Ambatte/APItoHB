@@ -2,7 +2,27 @@ import dedent from 'dedent';
 import _ from 'lodash';
 
 
-const spellFormat = function(data) {
+const spellQuery = `query Spell ($index: String) {
+  spell(index: $index) {
+    name
+    level
+    school {
+      index
+      name
+    }
+    casting_time
+    range
+    components
+    duration
+    desc
+    higher_level
+  }
+}`;
+
+const spellFormat = function(responseData) {
+
+	const data = responseData.data.spell;
+	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
 	const spellDefaults = {
 		name: 'Unnamed Spell',
@@ -51,4 +71,4 @@ const spellFormat = function(data) {
 
 }
 
-export { spellFormat }
+export { spellFormat, spellQuery }
