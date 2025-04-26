@@ -50,7 +50,7 @@ function Input({ setData, type, setType }) {
 					'2014' : '5.1',
 					'2024' : '5.2'
 				}
-				apiData.srdAttrib = srdAttribution(srdMap[year]);
+				apiData.data.srdAttrib = srdAttribution(srdMap[year]);
 			};
 
 			setData(apiData)
