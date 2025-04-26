@@ -30,19 +30,6 @@ const raceFormat = function(responseData) {
 	const data = responseData.data.race;
 
 	const raceDefaults = {
-		name: 'Unnamed Spell',
-		desc: [],
-		higher_level : [],
-		range: 'range',
-		components: [],
-		material : 'unknown material',
-		ritual: false,
-		duration: 'unknown',
-		concentration: false,
-		casting_time: 'unknown',
-		level: 10,
-		school: { name: '' },
-
 	};
 
 	_.defaultsDeep(data, raceDefaults);
