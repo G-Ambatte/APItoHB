@@ -28,6 +28,7 @@ const raceFormat = function(responseData) {
 
 	if(!responseData?.data?.race) return;
 	const data = responseData.data.race;
+	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
 	const raceDefaults = {
 	};
