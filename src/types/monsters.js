@@ -2,7 +2,82 @@ import dedent from 'dedent';
 import _ from 'lodash';
 
 
-const monsterFormat = function(data, url) {
+const monsterQuery = `query MonsterQuery($index: String) {
+  monster(index: $index) {
+    name
+    size
+    type
+    alignment
+    armor_class {
+      value
+      type
+    }
+    hit_points
+    hit_points_roll
+    speed {
+      walk
+      fly
+      hover
+      swim
+      climb
+      burrow
+    }
+    strength
+    dexterity
+    constitution
+    intelligence
+    wisdom
+    charisma
+    proficiencies {
+      proficiency {
+        index
+        name
+      }
+      value
+    }
+    damage_vulnerabilities
+    damage_resistances
+    damage_immunities
+    condition_immunities {
+      name
+    }
+    senses {
+      passive_perception
+      darkvision
+      blindsight
+      tremorsense
+      truesight
+    }
+    languages
+    challenge_rating
+    xp
+    proficiency_bonus
+
+    special_abilities {
+      name
+      usage {
+        times
+        type
+      }
+      desc
+    }
+    actions {
+      name
+      desc
+    }
+    legendary_actions {
+      name
+      desc
+    }
+    image
+  }
+}`;
+
+const monsterFormat = function(responseData, url) {
+
+	if(!responseData?.data?.monster) return;
+	const data = responseData.data.monster;
+	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
 	const monsterDefaults = {
 		name: 'Unnamed Monster',
@@ -32,10 +107,23 @@ const monsterFormat = function(data, url) {
 	};
 
 	_.defaultsDeep(data, monsterDefaults);
+
+	// Tweak format for flying monsters that can hover
+	if(data.speed.hover){
+		data.speed.hover = null;
+		data.speed.fly = `${data.speed.fly} (hover)`
+	}
+	// Remove all null speed entries
+	data.speed = Object.fromEntries(Object.entries(data.speed).filter(([ , value])=>{ return value != null; }));
+
+	const capitalize = function(text) {
+
+		return `${text.slice(0,1).toUpperCase()}${text.slice(1).toLowerCase()}`;
+	};
 		
 	const output = dedent`{{monster,frame
 	## ${data.name}
-	*${data.size} ${data.type}, ${data.alignment}*
+	*${capitalize(data.size)} ${data.type.toLowerCase()}, ${data.alignment}*
 	___
 	**Armor Class** :: ${data.armor_class.map((ac)=>{ return `${ac.value} (${ac.type})`; })}
 	**Hit Points**  :: ${data.hit_points} (${data.hit_points_roll})
@@ -52,7 +140,7 @@ const monsterFormat = function(data, url) {
 	**Damage Immunities**      :: ${data.damage_immunities?.length ? data.damage_immunities.join(', ') : 'None'}
 	**Condition Immunities**   :: ${data.condition_immunities?.length ? data.condition_immunities.map((condition_immunity)=>{return condition_immunity.name;}).join(', ') : 'None'}
 	**Senses**                 :: ${Object.keys(data.senses).map((sense)=>{return `${sense != 'passive_perception' ? sense : 'passive perception' } ${data.senses[sense]}`}).join(', ')}
-	**Languages**              :: ${data.languages}
+	**Languages**              :: ${data.languages || 'None'}
 	**Challenge**              :: ${data.challenge_rating} (${data.xp} XP) {{bonus **Proficiency Bonus** $[signed(${data.proficiency_bonus})]}}
 	___
 	${data.special_abilities?.length ?
@@ -85,4 +173,4 @@ const monsterFormat = function(data, url) {
 
 };
 
-export { monsterFormat };
+export { monsterFormat, monsterQuery };

@@ -5,6 +5,7 @@ import { spellQuery } from '../types/spells';
 import { srdAttribution } from '../types/srdAttribution';
 import { magicItemQuery } from '../types/magicItems';
 import { featQuery } from '../types/feats';
+import { monsterQuery } from '../types/monsters';
 
 
 function Input({ setData, type, setType }) {
@@ -34,7 +35,8 @@ function Input({ setData, type, setType }) {
 				'races'       : raceQuery,
 				'spells'      : spellQuery,
 				'magic-items' : magicItemQuery,
-				'feats'       : featQuery
+				'feats'       : featQuery,
+				'monsters'    : monsterQuery
 			}
 
 			let response;
@@ -62,7 +64,10 @@ function Input({ setData, type, setType }) {
 					'2014' : '5.1',
 					'2024' : '5.2'
 				}
-				apiData.data.srdAttrib = srdAttribution(srdMap[year]);
+				apiData.data = { 
+					...apiData.data,
+					srdAttrib : srdAttribution(srdMap[year])
+				};
 			};
 
 			setData(apiData)
