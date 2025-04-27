@@ -1,5 +1,8 @@
 import { useState } from 'react'
 
+import AutocompleteTextField from 'react-autocomplete-input';
+import 'react-autocomplete-input/dist/bundle.css';
+
 import { raceQuery } from '../types/races';
 import { spellQuery } from '../types/spells';
 import { srdAttribution } from '../types/srdAttribution';
@@ -14,6 +17,8 @@ function Input({ setData, type, setType }) {
 
 	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races' ];
 	const years = [ '2014', '2024'];
+
+	const [autoCompleteSuggestions, setAutoCompleteSuggestions] = useState([ 'aaaaa', 'aaaab' ]);
 
 	const [ text, setText ] = useState('');
 	const [ year, setYear ] = useState('2014');
@@ -88,11 +93,11 @@ function Input({ setData, type, setType }) {
 							{years.map((year, index)=>{ return <option key={index}>{year}</option>;})}
 						</select>
 						/
-						<select onChange={(e)=>{setType(e.target.value)}}>
-							{types.map((type, index)=>{ return <option key={index}>{type}</option>;})}
+						<select onChange={(e)=>{setData(); setText(''); return setType(e.target.value);}}>
+							{types.sort().map((type, index)=>{ return <option key={index}>{type}</option>;})}
 						</select>
 						/
-						<input type='text' value={text} onChange={(e)=>{setText(e.target.value)}}></input>
+						<AutocompleteTextField Component="input" value={text} onChange={(e)=>{setText(e)}} options={autoCompleteSuggestions} regex={/./} trigger='' spacer='' />
 					</p>
 				</label>
 				<input type="submit" value="Fetch"></input>

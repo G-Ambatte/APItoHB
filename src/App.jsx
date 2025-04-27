@@ -10,7 +10,7 @@ import Result from './components/Result/result';
 
 function App() {
   const [data, setData] = useState();
-  const [type, setType] = useState('monsters');
+  const [type, setType] = useState('feats');
 
   return (
     <div className='App'>
