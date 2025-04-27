@@ -9,13 +9,14 @@ import { srdAttribution } from '../types/srdAttribution';
 import { magicItemQuery } from '../types/magicItems';
 import { featQuery } from '../types/feats';
 import { monsterQuery } from '../types/monsters';
+import { subRaceQuery } from '../types/subraces';
 
 
 function Input({ setData, type, setType }) {
 
 	const url = 'https://www.dnd5eapi.co/api/'
 
-	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races' ];
+	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races', 'subraces' ];
 	const years = [ '2014', '2024'];
 
 	const [autoCompleteSuggestions, setAutoCompleteSuggestions] = useState([ 'aaaaa', 'aaaab' ]);
@@ -41,7 +42,8 @@ function Input({ setData, type, setType }) {
 				'spells'      : spellQuery,
 				'magic-items' : magicItemQuery,
 				'feats'       : featQuery,
-				'monsters'    : monsterQuery
+				'monsters'    : monsterQuery,
+				'subraces'    : subRaceQuery
 			}
 
 			let response;

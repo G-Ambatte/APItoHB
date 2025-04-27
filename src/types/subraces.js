@@ -2,55 +2,49 @@ import dedent from 'dedent';
 import _ from 'lodash';
 
 
-const subRaceQuery = `query RaceQuery($index: String) {
-  race(index: $index) {
+const subRaceQuery = `query Subrace($index: String) {
+  subrace(index: $index) {
     name
+    desc
+    racial_traits {
+      name
+      desc
+    }
     ability_bonuses {
+      bonus
       ability_score {
         full_name
       }
-      bonus
     }
-    age
-    alignment
-    size_description
-    speed
-    language_desc
-    traits {
-      index
+    race {
       name
-      desc
     }
   }
 }`;
 
 const subRaceFormat = function(responseData) {
 
-	if(!responseData?.data?.subrace) return;
-	const data = responseData.data.subrace;
-	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
+  if(!responseData?.data?.subrace) return;
+  const data = responseData.data.subrace;
+  if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
-	const subRaceDefaults = {
-	};
+  const subRaceDefaults = {
+  };
 
-	_.defaultsDeep(data, subRaceDefaults);
+  _.defaultsDeep(data, subRaceDefaults);
 
-	const output = dedent`
-	## ${data.name}
+  const output = dedent`
+  #### ${data.name}
+  ${data.race.name ? `*${data.race.name} variant*\n:\n` : ''}
 
-	### ${data.name} Traits
+  ${data.desc}\n\n
+  ${data.racial_traits.map((trait)=>{
+    return `***${trait.name}***. ${trait.desc}`
+  }).join('\n\n')}
 
-	${data.ability_bonuses.length ? `***Ability Score Increase.*** ${data.ability_bonuses.sort((a, b)=>{return b.bonus - a.bonus;}).map((ability, index)=>{return `${data.ability_bonuses.length > 1 && index == data.ability_bonuses.length - 1 ? 'and ' : ''}${index == 0 ? 'Your' : 'your'} ${ability.ability_score.full_name} score increases by ${ability.bonus}`;}).join(', ')}.  \n` : '' }
-	${data.age ? `***Age.*** ${data.age}  \n` : '' }
-	${data.alignment ? `***Alignment.*** ${data.alignment}  \n` : '' }
-	${data.size_description ? `***Size.*** ${data.size_description}  \n` : ''}
-	${data.speed ? `***Speed.*** Your base walking speed is ${data.speed} feet.  \n` : ''}
-
-	${data.traits.length ? data.traits.map((trait)=>{return `***${trait.name}.*** ${trait.desc.join('\n')}\n`}).join('\n') : ''}
-	${data.language_desc ? `***Languages.*** ${data.language_desc}\n\n` : '' }
-	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
-`
-	return output;
+  ${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
+  `
+  return output;
 
 }
 
