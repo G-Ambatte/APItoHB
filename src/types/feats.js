@@ -1,8 +1,23 @@
 import dedent from 'dedent';
 import _ from 'lodash';
 
+const featQuery = `query FeatQuery($index: String) {
+  feat(index: $index) {
+    name
+    prerequisites {
+      ability_score {
+        full_name
+      }
+      minimum_score
+    }
+    desc
+  }
+}`;
 
-const featFormat = function(data) {
+const featFormat = function(responseData) {
+
+	const data = responseData.data.feat;
+	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
 	const featDefaults = {
 		name: 'Unnamed Feat',
@@ -14,7 +29,7 @@ const featFormat = function(data) {
 
 	const output = dedent`
 	### ${data.name}
-	${data.prerequisites.length ? `*Prerequisite: ${data.prerequisites.map((prereq)=>{return `${prereq.ability_score.name} ${prereq.minimum_score}`;}).join(', ')}*` : ''}  
+	${data.prerequisites.length ? `*Prerequisite: ${data.prerequisites.map((prereq)=>{return `${prereq.ability_score.full_name} ${prereq.minimum_score}`;}).join(', ')}*` : ''}  
 	:
 	${data.desc.map((line)=>{ return line;}).join('  \n')}
 	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
@@ -24,4 +39,4 @@ const featFormat = function(data) {
 }
 
 
-export { featFormat }
+export { featFormat, featQuery }

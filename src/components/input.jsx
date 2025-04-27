@@ -4,6 +4,7 @@ import { raceQuery } from '../types/races';
 import { spellQuery } from '../types/spells';
 import { srdAttribution } from '../types/srdAttribution';
 import { magicItemQuery } from '../types/magicItems';
+import { featQuery } from '../types/feats';
 
 
 function Input({ setData, type, setType }) {
@@ -32,7 +33,8 @@ function Input({ setData, type, setType }) {
 			const graphQLMap = {
 				'races'       : raceQuery,
 				'spells'      : spellQuery,
-				'magic-items' : magicItemQuery
+				'magic-items' : magicItemQuery,
+				'feats'       : featQuery
 			}
 
 			let response;
