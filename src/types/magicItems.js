@@ -1,10 +1,21 @@
 import dedent from 'dedent';
 import _ from 'lodash';
 
-const magicItemFormat = function(data) {
+const magicItemQuery = `query MagicItemQuery($index: String) {
+  magicItem(index: $index) {
+    name
+    desc
+    image
+  }
+}`;
+
+const magicItemFormat = function(responseData) {
+
+	const data = responseData.data.magicItem;
+	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
 	const magicItemDefaults = {
-		name: 'Unnamed Spell',
+		name: 'Unnamed Magic Item',
 		desc: [],
 	};
 
@@ -23,4 +34,4 @@ const magicItemFormat = function(data) {
 
 }
 
-export { magicItemFormat }
+export { magicItemFormat, magicItemQuery }

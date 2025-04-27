@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { raceQuery } from '../types/races';
 import { spellQuery } from '../types/spells';
 import { srdAttribution } from '../types/srdAttribution';
+import { magicItemQuery } from '../types/magicItems';
 
 
 function Input({ setData, type, setType }) {
@@ -28,24 +29,23 @@ function Input({ setData, type, setType }) {
 		// console.log(dataURL);
 
 		try {
-			const graphQLTypes = ['races', 'spells'];
+			const graphQLMap = {
+				'races'       : raceQuery,
+				'spells'      : spellQuery,
+				'magic-items' : magicItemQuery
+			}
 
 			let response;
-			if(!graphQLTypes.includes(type)) {
+			if(!Object.keys(graphQLMap).includes(type)) {
 				response = await fetch(dataURL);
 			} else {
 				console.log('GraphQL');
-
-				const queryMap = {
-					'races'  : raceQuery,
-					'spells' : spellQuery
-				}
 
 				response = await fetch(`https://www.dnd5eapi.co/graphql/${year}`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body : JSON.stringify({
-						query     : queryMap[type],
+						query     : graphQLMap[type],
 						variables : { index : text }
 					})
 				})
