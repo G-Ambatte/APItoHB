@@ -19,6 +19,12 @@ const spellQuery = `query Spell ($index: String) {
   }
 }`;
 
+const spellSuggestionsQuery = `query Races {
+	spells {
+	  index
+	}
+  }`;
+
 const spellFormat = function(responseData) {
 
 	const data = responseData.data.spell;
@@ -71,4 +77,4 @@ const spellFormat = function(responseData) {
 
 }
 
-export { spellFormat, spellQuery }
+export { spellFormat, spellQuery, spellSuggestionsQuery }

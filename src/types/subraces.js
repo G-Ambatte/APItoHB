@@ -22,6 +22,13 @@ const subRaceQuery = `query Subrace($index: String) {
   }
 }`;
 
+const subRaceSuggestionsQuery = `query Races {
+	subraces {
+      index
+    }
+  }`;
+
+
 const subRaceFormat = function(responseData) {
 
   if(!responseData?.data?.subrace) return;
@@ -48,4 +55,4 @@ const subRaceFormat = function(responseData) {
 
 }
 
-export { subRaceFormat, subRaceQuery }
+export { subRaceFormat, subRaceQuery, subRaceSuggestionsQuery }

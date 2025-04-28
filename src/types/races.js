@@ -24,6 +24,12 @@ const raceQuery = `query RaceQuery($index: String) {
   }
 }`;
 
+const raceSuggestionsQuery = `query Races {
+	races {
+	  index
+	}
+  }`;
+
 const raceFormat = function(responseData) {
 
 	if(!responseData?.data?.race) return;
@@ -54,4 +60,4 @@ const raceFormat = function(responseData) {
 
 }
 
-export { raceFormat, raceQuery }
+export { raceFormat, raceQuery, raceSuggestionsQuery }

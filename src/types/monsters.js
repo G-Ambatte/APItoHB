@@ -73,6 +73,12 @@ const monsterQuery = `query MonsterQuery($index: String) {
   }
 }`;
 
+const monsterSuggestionsQuery = `query Monsters($limit: Int!) {
+	monsters(limit: $limit) {
+	  index
+	}
+  }`;
+
 const monsterFormat = function(responseData, url) {
 
 	if(!responseData?.data?.monster) return;
@@ -173,4 +179,4 @@ const monsterFormat = function(responseData, url) {
 
 };
 
-export { monsterFormat, monsterQuery };
+export { monsterFormat, monsterQuery, monsterSuggestionsQuery };

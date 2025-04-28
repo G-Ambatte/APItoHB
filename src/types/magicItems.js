@@ -9,8 +9,15 @@ const magicItemQuery = `query MagicItemQuery($index: String) {
   }
 }`;
 
+const magicItemSuggestionsQuery = `query MagicItems($limit: Int!) {
+  magicItems(limit: $limit) {
+    index
+  }
+}`;
+
 const magicItemFormat = function(responseData) {
 
+	if(!responseData?.data?.magicItem) return;
 	const data = responseData.data.magicItem;
 	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
@@ -34,4 +41,4 @@ const magicItemFormat = function(responseData) {
 
 }
 
-export { magicItemFormat, magicItemQuery }
+export { magicItemFormat, magicItemQuery, magicItemSuggestionsQuery }

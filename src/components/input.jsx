@@ -1,15 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import camelCase from 'camelcase';
 
 import AutocompleteTextField from 'react-autocomplete-input';
 import 'react-autocomplete-input/dist/bundle.css';
 
-import { raceQuery } from '../types/races';
-import { spellQuery } from '../types/spells';
+import { raceQuery, raceSuggestionsQuery } from '../types/races';
+import { spellQuery, spellSuggestionsQuery } from '../types/spells';
 import { srdAttribution } from '../types/srdAttribution';
-import { magicItemQuery } from '../types/magicItems';
-import { featQuery } from '../types/feats';
-import { monsterQuery } from '../types/monsters';
-import { subRaceQuery } from '../types/subraces';
+import { magicItemQuery, magicItemSuggestionsQuery } from '../types/magicItems';
+import { featQuery, featSuggestionsQuery } from '../types/feats';
+import { monsterQuery, monsterSuggestionsQuery } from '../types/monsters';
+import { subRaceQuery, subRaceSuggestionsQuery } from '../types/subraces';
 
 
 function Input({ setData, type, setType }) {
@@ -25,6 +26,40 @@ function Input({ setData, type, setType }) {
 	const [ year, setYear ] = useState('2014');
 	const [ srdAttrib, setSrdAttrib ] = useState(true);
 
+	useEffect(()=>{
+		const suggestionsMap = {
+			'feats'       : featSuggestionsQuery,
+			'magic-items' : magicItemSuggestionsQuery,
+			'races'       : raceSuggestionsQuery,
+			'spells'      : spellSuggestionsQuery,
+			'subraces'    : subRaceSuggestionsQuery,
+			'monsters'    : monsterSuggestionsQuery
+		};
+		if(!Object.keys(suggestionsMap).includes(type)){
+			console.log('Unknown type for suggestions');
+			setAutoCompleteSuggestions([]);
+			return;
+		}
+
+		const fetchSuggestions = async ()=>{
+			const response = await fetch(`https://www.dnd5eapi.co/graphql/${year}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body : JSON.stringify({
+					query     : suggestionsMap[type],
+					variables : { limit: 500 }
+				})
+			})
+
+			const suggestionData = await response.json();
+			const suggestions = suggestionData.data[camelCase(type)].map((suggestion)=>{return suggestion.index;});
+
+			setAutoCompleteSuggestions(suggestions);
+		}
+		fetchSuggestions();
+		setData();
+		setText(''); 
+	}, [type, year, setData])
 
 	const fetchData = async function(e){
 		e.preventDefault();
@@ -50,8 +85,6 @@ function Input({ setData, type, setType }) {
 			if(!Object.keys(graphQLMap).includes(type)) {
 				response = await fetch(dataURL);
 			} else {
-				console.log('GraphQL');
-
 				response = await fetch(`https://www.dnd5eapi.co/graphql/${year}`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
@@ -89,18 +122,18 @@ function Input({ setData, type, setType }) {
 		<div className='input'>
 			<form onSubmit={fetchData}>
 				<label>
-					<p>
+					<span>
 						{url}
 						<select onChange={(e)=>{setYear(e.target.value)}}>
 							{years.map((year, index)=>{ return <option key={index}>{year}</option>;})}
 						</select>
 						/
-						<select onChange={(e)=>{setData(); setText(''); return setType(e.target.value);}}>
+						<select onChange={(e)=>{setType(e.target.value);}}>
 							{types.sort().map((type, index)=>{ return <option key={index}>{type}</option>;})}
 						</select>
 						/
 						<AutocompleteTextField Component="input" value={text} onChange={(e)=>{setText(e)}} options={autoCompleteSuggestions} regex={/./} trigger='' spacer='' />
-					</p>
+					</span>
 				</label>
 				<input type="submit" value="Fetch"></input>
 				<label>

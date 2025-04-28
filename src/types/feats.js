@@ -14,8 +14,15 @@ const featQuery = `query FeatQuery($index: String) {
   }
 }`;
 
+const featSuggestionsQuery = `query Feats {
+  feats {
+    index
+  }
+}`;
+
 const featFormat = function(responseData) {
 
+	if(!responseData?.data?.feat) return;
 	const data = responseData.data.feat;
 	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
@@ -39,4 +46,4 @@ const featFormat = function(responseData) {
 }
 
 
-export { featFormat, featQuery }
+export { featFormat, featQuery, featSuggestionsQuery }
