@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "camelcase": "^8.0.0",
     "dedent": "^1.5.3",
     "lodash": "^4.17.21",
     "react": "^19.0.0",
