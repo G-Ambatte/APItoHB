@@ -30,10 +30,10 @@ function Input({ setData, type, setType }) {
 		const suggestionsMap = {
 			'feats'       : featSuggestionsQuery,
 			'magic-items' : magicItemSuggestionsQuery,
+			'monsters'    : monsterSuggestionsQuery,
 			'races'       : raceSuggestionsQuery,
 			'spells'      : spellSuggestionsQuery,
-			'subraces'    : subRaceSuggestionsQuery,
-			'monsters'    : monsterSuggestionsQuery
+			'subraces'    : subRaceSuggestionsQuery
 		};
 		if(!Object.keys(suggestionsMap).includes(type)){
 			console.log('Unknown type for suggestions');
@@ -73,11 +73,11 @@ function Input({ setData, type, setType }) {
 
 		try {
 			const graphQLMap = {
+				'feats'       : featQuery,
+				'magic-items' : magicItemQuery,
+				'monsters'    : monsterQuery,
 				'races'       : raceQuery,
 				'spells'      : spellQuery,
-				'magic-items' : magicItemQuery,
-				'feats'       : featQuery,
-				'monsters'    : monsterQuery,
 				'subraces'    : subRaceQuery
 			}
 
