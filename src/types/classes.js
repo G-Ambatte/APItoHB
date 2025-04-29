@@ -93,6 +93,9 @@ const classQuery = `query Class ($index: String ) {
           arcane_recovery_levels
         }
       }
+      subclass {
+        name
+      }
     }
     proficiencies {
       name
@@ -139,38 +142,53 @@ const classFormat = function(responseData) {
 
 [class_name]: ${data.name}
 
-  # $[class_name]
-
-  ## Class Features
-
-  As a $[class_name], you gain the following features:
-
-  ### Hit Points
-
-  [hit_die]:${data.hit_die}
-
-  **Hit Dice:** :: 1d$[hit_die] per $[class_name] level
-  **Hit Point at 1st Level:** :: $[hit_die] + your Constitution modifier
-  **Hit Points at Higher Levels:** :: 1d$[hit_die] (or $[hit_die / 2 + 1]) + your Constitution modifier per $[class_name] level after 1st
-
-  ### Proficiencies
-
-  **Armor:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'ARMOR';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
-  **Weapons:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'WEAPONS';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
-  **Tools:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'ARTISANS_TOOLS';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
-  **Saving Throws:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'SAVING_THROWS';}).map((prof)=>{return prof.reference.full_name;}).join(', ') || 'None'}
-  **Skills:** :: ${data.proficiency_choices.map((prof_choice)=>{return prof_choice.desc}).join(' ') || 'None'}
-
-  ### Equipment
-
-  You start with the following equipment, in addition to the equipment granted by your background:
-
-  ${data.starting_equipment_options.map((equip_option)=>{return `- ${equip_option.desc}`;}).join('  \n')}
-  ${data.starting_equipment.map((equip)=>{return `- ${equip.quantity}x ${equip.equipment.name}`}).join(', ')}
+[hit_die]: ${data.hit_die}
 
 
+# $[class_name]
 
-  ${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
+## Class Features
+
+As a $[class_name], you gain the following features:
+
+### Hit Points
+
+**Hit Dice:** :: 1d$[hit_die] per $[class_name] level
+**Hit Point at 1st Level:** :: $[hit_die] + your Constitution modifier
+**Hit Points at Higher Levels:** :: 1d$[hit_die] (or $[hit_die / 2 + 1]) + your Constitution modifier per $[class_name] level after 1st
+
+### Proficiencies
+
+**Armor:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'ARMOR';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
+**Weapons:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'WEAPONS';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
+**Tools:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'ARTISANS_TOOLS';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
+**Saving Throws:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'SAVING_THROWS';}).map((prof)=>{return prof.reference.full_name;}).join(', ') || 'None'}
+**Skills:** :: ${data.proficiency_choices.map((prof_choice)=>{return prof_choice.desc}).join(' ') || 'None'}
+
+### Equipment
+
+You start with the following equipment, in addition to the equipment granted by your background:
+
+${data.starting_equipment_options.map((equip_option)=>{return `- ${equip_option.desc}`;}).join('  \n')}
+${data.starting_equipment.map((equip)=>{return `- ${equip.quantity}x ${equip.equipment.name}`}).join(', ')}
+
+{{classTable,fram
+###### $[class_name]
+
+${data.class_levels
+    .filter((level)=>{
+      return level.level == 1 && !level.subclass;
+    })
+    .map((level)=>{
+      return `| ${level.level} | ${level.prof_bonus} | ${level.features.map((feature)=>{return feature.name;}).join(', ')} | >>`;
+    })
+    .join('  \n')}
+
+
+}}
+
+
+${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
 `
 	return output;
 
