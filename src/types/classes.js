@@ -2,56 +2,178 @@ import dedent from 'dedent';
 import _ from 'lodash';
 
 
-const raceQuery = `query RaceQuery($index: String) {
-  race(index: $index) {
+const classQuery = `query Class ($index: String ) {
+  class(index: $index) {
     name
-    ability_bonuses {
-      ability_score {
-        full_name
+    hit_die
+    class_levels {
+      level
+      prof_bonus
+      spellcasting {
+        cantrips_known
+        spell_slots_level_1
+        spell_slots_level_2
+        spell_slots_level_3
+        spell_slots_level_4
+        spell_slots_level_5
+        spell_slots_level_6
+        spell_slots_level_7
+        spell_slots_level_8
+        spell_slots_level_9
+        spells_known
       }
-      bonus
+      features {
+        name
+        desc
+      }
+      class_specific {
+        ... on BarbarianSpecific {
+          rage_count
+          rage_damage_bonus
+          brutal_critical_dice
+        }
+        ... on BardSpecific {
+          bardic_inspiration_die
+          song_of_rest_die
+          magical_secrets_max_5
+          magical_secrets_max_7
+          magical_secrets_max_9
+        }
+        ... on ClericSpecific {
+          channel_divinity_charges
+          destroy_undead_cr
+        }
+        ... on DruidSpecific {
+          wild_shape_max_cr
+          wild_shape_swim
+          wild_shape_fly
+        }
+        ... on FighterSpecific {
+          action_surges
+          indomitable_uses
+          extra_attacks
+        }
+        ... on MonkSpecific {
+          martial_arts {
+            dice_count
+            dice_value
+          }
+          ki_points
+          unarmored_movement
+        }
+        ... on PaladinSpecific {
+          aura_range
+        }
+        ... on RangerSpecific {
+          favored_enemies
+          favored_terrain
+        }
+        ... on RogueSpecific {
+          sneak_attack {
+            dice_count
+            dice_value
+          }
+        }
+        ... on SorcererSpecific {
+          sorcery_points
+          metamagic_known
+          creating_spell_slots {
+            sorcery_point_cost
+            spell_slot_level
+          }
+        }
+        ... on WarlockSpecific {
+          invocations_known
+          mystic_arcanum_level_6
+          mystic_arcanum_level_7
+          mystic_arcanum_level_8
+          mystic_arcanum_level_9
+        }
+        ... on WizardSpecific {
+          arcane_recovery_levels
+        }
+      }
     }
-    age
-    alignment
-    size_description
-    speed
-    language_desc
-    traits {
-      index
+    proficiencies {
       name
+      type
+      reference {
+        ... on AbilityScore {
+          full_name
+        }
+      }
+    }
+    starting_equipment_options {
+      desc
+    }
+    starting_equipment {
+      equipment {
+        name
+      }
+      quantity
+    }
+    proficiency_choices {
       desc
     }
   }
 }`;
 
-const raceFormat = function(responseData) {
+const classSuggestionsQuery = `query Classes {
+	classes {
+	  index
+	}
+}`;
 
-	if(!responseData?.data?.race) return;
-	const data = responseData.data.race;
+const classFormat = function(responseData) {
+
+  if(!responseData?.data?.class) return;
+	const data = responseData.data.class;
 	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
-	const raceDefaults = {
+	const classDefaults = {
 	};
 
-	_.defaultsDeep(data, raceDefaults);
+	_.defaultsDeep(data, classDefaults);
 
 	const output = dedent`
-	## ${data.name}
 
-	### ${data.name} Traits
+[class_name]: ${data.name}
 
-	${data.ability_bonuses.length ? `***Ability Score Increase.*** ${data.ability_bonuses.sort((a, b)=>{return b.bonus - a.bonus;}).map((ability, index)=>{return `${data.ability_bonuses.length > 1 && index == data.ability_bonuses.length - 1 ? 'and ' : ''}${index == 0 ? 'Your' : 'your'} ${ability.ability_score.full_name} score increases by ${ability.bonus}`;}).join(', ')}.  \n` : '' }
-	${data.age ? `***Age.*** ${data.age}  \n` : '' }
-	${data.alignment ? `***Alignment.*** ${data.alignment}  \n` : '' }
-	${data.size_description ? `***Size.*** ${data.size_description}  \n` : ''}
-	${data.speed ? `***Speed.*** Your base walking speed is ${data.speed} feet.  \n` : ''}
+  # $[class_name]
 
-	${data.traits.length ? data.traits.map((trait)=>{return `***${trait.name}.*** ${trait.desc.join('\n')}\n`}).join('\n') : ''}
-	${data.language_desc ? `***Languages.*** ${data.language_desc}\n\n` : '' }
-	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
+  ## Class Features
+
+  As a $[class_name], you gain the following features:
+
+  ### Hit Points
+
+  [hit_die]:${data.hit_die}
+
+  **Hit Dice:** :: 1d$[hit_die] per $[class_name] level
+  **Hit Point at 1st Level:** :: $[hit_die] + your Constitution modifier
+  **Hit Points at Higher Levels:** :: 1d$[hit_die] (or $[hit_die / 2 + 1]) + your Constitution modifier per $[class_name] level after 1st
+
+  ### Proficiencies
+
+  **Armor:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'ARMOR';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
+  **Weapons:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'WEAPONS';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
+  **Tools:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'ARTISANS_TOOLS';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
+  **Saving Throws:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'SAVING_THROWS';}).map((prof)=>{return prof.reference.full_name;}).join(', ') || 'None'}
+  **Skills:** :: ${data.proficiency_choices.map((prof_choice)=>{return prof_choice.desc}).join(' ') || 'None'}
+
+  ### Equipment
+
+  You start with the following equipment, in addition to the equipment granted by your background:
+
+  ${data.starting_equipment_options.map((equip_option)=>{return `- ${equip_option.desc}`;}).join('  \n')}
+  ${data.starting_equipment.map((equip)=>{return `- ${equip.quantity}x ${equip.equipment.name}`}).join(', ')}
+
+
+
+  ${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
 `
 	return output;
 
 }
 
-export { raceFormat, raceQuery }
+export { classFormat, classQuery, classSuggestionsQuery }

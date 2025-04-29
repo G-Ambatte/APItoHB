@@ -8,6 +8,7 @@ import { featFormat } from '../../types/feats';
 import { magicItemFormat } from '../../types/magicItems';
 import { raceFormat } from '../../types/races';
 import { subRaceFormat } from '../../types/subraces';
+import { classFormat } from '../../types/classes';
 
 function Result({ data, type }) {
 
@@ -29,7 +30,8 @@ function Result({ data, type }) {
 			'feats'       : featFormat,
 			'magic-items' : magicItemFormat,
 			'races'       : raceFormat,
-			'subraces'    : subRaceFormat
+			'subraces'    : subRaceFormat,
+			'classes'     : classFormat
 		}
 
 		if(activeTab == 'homebrewery') setText(outputMap[type] ? outputMap[type](data, url) : '');

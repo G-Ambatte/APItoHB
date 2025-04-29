@@ -11,13 +11,14 @@ import { magicItemQuery, magicItemSuggestionsQuery } from '../types/magicItems';
 import { featQuery, featSuggestionsQuery } from '../types/feats';
 import { monsterQuery, monsterSuggestionsQuery } from '../types/monsters';
 import { subRaceQuery, subRaceSuggestionsQuery } from '../types/subraces';
+import { classQuery, classSuggestionsQuery } from '../types/classes';
 
 
 function Input({ setData, type, setType }) {
 
 	const url = 'https://www.dnd5eapi.co/api/'
 
-	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races', 'subraces' ];
+	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races', 'subraces', 'classes' ];
 	const years = [ '2014', '2024'];
 
 	const [autoCompleteSuggestions, setAutoCompleteSuggestions] = useState([ 'aaaaa', 'aaaab' ]);
@@ -28,6 +29,7 @@ function Input({ setData, type, setType }) {
 
 	useEffect(()=>{
 		const suggestionsMap = {
+			'classes'     : classSuggestionsQuery,
 			'feats'       : featSuggestionsQuery,
 			'magic-items' : magicItemSuggestionsQuery,
 			'monsters'    : monsterSuggestionsQuery,
@@ -73,6 +75,7 @@ function Input({ setData, type, setType }) {
 
 		try {
 			const graphQLMap = {
+				'classes'     : classQuery,
 				'feats'       : featQuery,
 				'magic-items' : magicItemQuery,
 				'monsters'    : monsterQuery,
