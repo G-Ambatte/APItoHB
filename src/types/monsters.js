@@ -171,7 +171,7 @@ const monsterFormat = function(responseData, url) {
 	 : ''}
 	}}
 
-	${data.image ? `![image](${url}${data.image})` : ''}
+	${data.image ? `![image](${url}${data.image}){width:100%}` : ''}
 	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
 	`;
 
