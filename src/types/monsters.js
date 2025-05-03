@@ -145,7 +145,7 @@ const monsterFormat = function(responseData, url) {
 	**Damage Resistances**     :: ${data.damage_resistances?.length ? data.damage_resistances.join(', ') : 'None'}
 	**Damage Immunities**      :: ${data.damage_immunities?.length ? data.damage_immunities.join(', ') : 'None'}
 	**Condition Immunities**   :: ${data.condition_immunities?.length ? data.condition_immunities.map((condition_immunity)=>{return condition_immunity.name;}).join(', ') : 'None'}
-	**Senses**                 :: ${Object.keys(data.senses).map((sense)=>{return `${sense != 'passive_perception' ? sense : 'passive perception' } ${data.senses[sense]}`}).join(', ')}
+	**Senses**                 :: ${Object.keys(data.senses).filter((sense)=>{ return data.senses[sense]; }).map((sense)=>{ return `${sense != 'passive_perception' ? sense : 'passive perception' } ${data.senses[sense]}` }).join(', ')}
 	**Languages**              :: ${data.languages || 'None'}
 	**Challenge**              :: ${data.challenge_rating} (${data.xp} XP) {{bonus **Proficiency Bonus** $[signed(${data.proficiency_bonus})]}}
 	___
