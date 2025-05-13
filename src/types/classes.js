@@ -172,20 +172,21 @@ You start with the following equipment, in addition to the equipment granted by 
 ${data.starting_equipment_options.map((equip_option)=>{return `- ${equip_option.desc}`;}).join('  \n')}
 ${data.starting_equipment.map((equip)=>{return `- ${equip.quantity}x ${equip.equipment.name}`}).join(', ')}
 
-{{classTable,fram
+{{classTable,frame
 ###### $[class_name]
 
+| Level | Proficiency Bonus | Features |${data.class_levels.filter((level)=>{return level.level == 20 && level.spellcasting}).length ? ` Cantrips Known | 1 | 2 | 3 | 4 | 5 |${data.class_levels.filter((level)=>{return level.level == 20})[0].spellcasting?.spell_slots_level_9 ? ' 6 | 7 | 8 | 9 |' : ''}` : '' }
+|:-----:|:-----------------:|:---------|${data.class_levels.filter((level)=>{return level.level == 20 && level.spellcasting}).length ? `:-:|:-:|:-:|:-:|:-:|:-:|${data.class_levels.filter((level)=>{return level.level == 20})[0].spellcasting?.spell_slots_level_9 ? ':-:|:-:|:-:|:-:|' : ''}` : '' }
 ${data.class_levels
     .filter((level)=>{
-      return level.level == 1 && !level.subclass;
+      return !level.subclass;
     })
+    .sort((a,b)=>{return a.level > b.level})
     .map((level)=>{
-      return `| ${level.level} | ${level.prof_bonus} | ${level.features.map((feature)=>{return feature.name;}).join(', ')} | >>`;
+      return `| ${level.level} | ${level.prof_bonus} | ${level.features.map((feature)=>{return feature.name;}).join(', ')} | ${level.spellcasting ? `${level.spellcasting.cantrips_known || '-'} | ${level.spellcasting.spell_slots_level_1 || '-'} | ${level.spellcasting.spell_slots_level_2 || '-'} | ${level.spellcasting.spell_slots_level_3 || '-'} | ${level.spellcasting.spell_slots_level_4 || '-'} | ${level.spellcasting.spell_slots_level_5 || '-'} | ${level.spellcasting.spell_slots_level_6 || '-'} | ${level.spellcasting.spell_slots_level_7 || '-'} | ${level.spellcasting.spell_slots_level_8 || '-'} | ${level.spellcasting.spell_slots_level_9 || '-'} |` : ''}`;
     })
     .join('  \n')}
-
-
-}}
+    }}
 
 
 ${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
