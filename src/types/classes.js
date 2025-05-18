@@ -172,7 +172,7 @@ You start with the following equipment, in addition to the equipment granted by 
 ${data.starting_equipment_options.map((equip_option)=>{return `- ${equip_option.desc}`;}).join('  \n')}
 ${data.starting_equipment.map((equip)=>{return `- ${equip.quantity}x ${equip.equipment.name}`}).join(', ')}
 
-{{classTable,frame
+{{classTable,frame,wide
 ###### $[class_name]
 
 | Level | Proficiency Bonus | Features |${data.class_levels.filter((level)=>{return level.level == 20 && level.spellcasting}).length ? ` Cantrips Known | 1 | 2 | 3 | 4 | 5 |${data.class_levels.filter((level)=>{return level.level == 20})[0].spellcasting?.spell_slots_level_9 ? ' 6 | 7 | 8 | 9 |' : ''}` : '' }
@@ -186,10 +186,37 @@ ${data.class_levels
       return `| ${level.level} | ${level.prof_bonus} | ${level.features.map((feature)=>{return feature.name;}).join(', ')} | ${level.spellcasting ? `${level.spellcasting.cantrips_known || '-'} | ${level.spellcasting.spell_slots_level_1 || '-'} | ${level.spellcasting.spell_slots_level_2 || '-'} | ${level.spellcasting.spell_slots_level_3 || '-'} | ${level.spellcasting.spell_slots_level_4 || '-'} | ${level.spellcasting.spell_slots_level_5 || '-'} | ${level.spellcasting.spell_slots_level_6 || '-'} | ${level.spellcasting.spell_slots_level_7 || '-'} | ${level.spellcasting.spell_slots_level_8 || '-'} | ${level.spellcasting.spell_slots_level_9 || '-'} |` : ''}`;
     })
     .join('  \n')}
-    }}
+}}
+
+\page
+
+${_.uniqBy(
+    data.class_levels
+      .filter((level)=>{return !level.subclass;})                             // Eliminate subclass specific level
+      .sort((a,b)=>{return a.level > b.level;})                               // Ensure they are sorted 1 => 20
+      .map((level)=>{return level.features;})                                 // Extract only features
+      .flat()                                                                 // Flatten the array
+      .filter((feature)=>{return feature.name.slice(-7) !== 'feature';})      // Remove any features that end in 'feature'; these are improvements on an existing feature
+      .map((feature)=>{ return {
+        ...feature,
+        name: feature.name.replace(/(\(.*\))$/, '')                           // Eliminate any parts of feature names in parentheses
+      };
+    }),
+      (a)=>{return a.name;}                                                   // Eliminate duplicate names in feature array
+    )
+    .map((feature)=>{
+      return dedent`
+      ### ${feature.name}
+      
+      ${feature.desc.join('\n')}
+      
+      :
+      `;
+    }).join('\n\n')
+}
 
 
-${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
+${data.srdAttrib ? `\n:\n\\page\n\n{{descriptive,wide\n${data.srdAttrib}\n}}` : ''}
 `
 	return output;
 
