@@ -19,7 +19,8 @@ function Input({ setData, type, setType }) {
 	const url = 'https://www.dnd5eapi.co/api/'
 
 	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races', 'subraces', 'classes' ];
-	const years = [ '2014', '2024'];
+	// const years = [ '2014', '2024'];
+	const years = [ '2014' ]; // Only 2014 for now
 
 	const [autoCompleteSuggestions, setAutoCompleteSuggestions] = useState([ 'aaaaa', 'aaaab' ]);
 
