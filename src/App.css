@@ -1,12 +1,17 @@
-#root {
-  width: 80vw;
-  margin: 10vh auto 0;
-  padding: 2rem;
-  text-align: center;
+body {
+  background-color: rgb(44, 62, 80);
+
+  #root {
+    width: 80vw;
+    margin: 10vh auto 0;
+    padding: 2rem;
+    text-align: center;
   
-  .App {
-    width: 100%;
-    margin: 0 auto;
-    max-height: 80vh;
+    .App {
+      width: 100%;
+      margin: 0 auto;
+      max-height: 80vh;
+      color: #eee;
+    }
   }
 }
