@@ -27,6 +27,6 @@ Formats:
   - [x] Traits - ~~requires fetching additional data~~ solved by GraphQL
     - [ ] Dragonborn *Draconic Ancestry*
 - [ ] Sub-Races
-- [ ] Classes
+- [x] Classes
 - [ ] Subclasses
 - [x] ~~NPCs~~ (NPCs are included in Monster data)
