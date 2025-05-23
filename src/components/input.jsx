@@ -55,7 +55,7 @@ function Input({ setData, type, setType }) {
 			})
 
 			const suggestionData = await response.json();
-			const suggestions = suggestionData.data[camelCase(type)].map((suggestion)=>{return suggestion.index;});
+			const suggestions = suggestionData.data[camelCase(type)].sort((a,b)=>{return a.index > b.index;}).map((suggestion)=>{return suggestion.index;});
 
 			setAutoCompleteSuggestions(suggestions);
 		}
