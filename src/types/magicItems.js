@@ -31,10 +31,15 @@ const magicItemFormat = function(responseData) {
 	const output = dedent`
 	#### ${data.name}
 	${data.desc.map((line, index)=>{ 
+		const prevLine = index > 0 ? data.desc[index - 1] : ''
+		// const nextLine = index + 1 < data.desc.length ? data.desc[index + 1] : ''
+
 		if(index == 0) return `*${line}*\n\n:\n`;
-		if(line.match(/\(table\)/i)) return `###### ${line}`
-		return line;
-	}).join('  \n')}
+		if(line.match(/\(table\)/i)) return `###### ${line}\n`
+		if(line.slice(0, 1) == '|' && line.slice(-1) == '|') return line;
+		if(prevLine.slice(0, 1) == '|' && line.slice(0, 1) != '|' ) return `\n${line}\n`
+		return `${line}\n`;
+	}).join('\n')}
 	${data.srdAttrib ? `\n:\n{{descriptive\n${data.srdAttrib}\n}}` : ''}
 `
 	return output;
