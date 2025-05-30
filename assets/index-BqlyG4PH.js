@@ -185,10 +185,14 @@ ${h.srdAttrib}
   }
 }`,sE=function(o){var y,p;if(!((y=o==null?void 0:o.data)!=null&&y.magicItem))return;const h=o.data.magicItem;(p=o.data)!=null&&p.srdAttrib&&(h.srdAttrib=o.data.srdAttrib);const c={name:"Unnamed Magic Item",desc:[]};return Tl.defaultsDeep(h,c),Pu`
 	#### ${h.name}
-	${h.desc.map((_,R)=>R==0?`*${_}*
+	${h.desc.map((_,R)=>{const m=R>0?h.desc[R-1]:"";return R==0?`*${_}*
 
 :
-`:_.match(/\(table\)/i)?`###### ${_}`:_).join(`  
+`:_.match(/\(table\)/i)?`###### ${_}
+`:_.slice(0,1)=="|"&&_.slice(-1)=="|"?_:m.slice(0,1)=="|"&&_.slice(0,1)!="|"?`
+${_}
+`:`${_}
+`}).join(`
 `)}
 	${h.srdAttrib?`
 :
