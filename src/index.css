@@ -55,15 +55,21 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    background-color: #213547;
+    color: #ffffff;
+    --color-fore: #eee;
+    --color-mid: #777;
+    --color-aft: #333;
+  }
+}
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+    --color-fore: #333;
+    --color-mid: #777;
+    --color-aft: #eee;
   }
 }

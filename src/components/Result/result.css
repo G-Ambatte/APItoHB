@@ -11,7 +11,8 @@
 		& button {
 			border: 1px solid black;
 			margin-right: 3px;
-			background-color: #eee;
+			background-color: var(--color-aft);
+			color: var(--color-fore);
 		}
 	}
 
@@ -19,7 +20,8 @@
 		width: 100%;
 		min-height: 60vh;
 		max-height: 80vh;
-		background-color: #eee;
+		background-color: var(--color-aft);
+		color: var(--color-fore);
 
 		& ~ button {
 			--color-light: #eee;

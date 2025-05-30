@@ -1,3 +1,5 @@
+import './input.css'
+
 import { useState, useEffect } from 'react'
 import camelCase from 'camelcase';
 

@@ -1,0 +1,4 @@
+ul.react-autocomplete-input {
+	color: var(--color-fore);
+	background-color: var(--color-aft);
+}
