@@ -16,15 +16,14 @@ import { subRaceQuery, subRaceSuggestionsQuery } from '../types/subraces';
 import { classQuery, classSuggestionsQuery } from '../types/classes';
 
 
+const URL = 'https://www.dnd5eapi.co';
+
 function Input({ setData, type, setType }) {
-
-	const url = 'https://www.dnd5eapi.co/api/'
-
 	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races', 'subraces', 'classes' ];
 	// const years = [ '2014', '2024'];
 	const years = [ '2014' ]; // Only 2014 for now
 
-	const [autoCompleteSuggestions, setAutoCompleteSuggestions] = useState([ 'aaaaa', 'aaaab' ]);
+	const [autoCompleteSuggestions, setAutoCompleteSuggestions] = useState([ '', '' ]);
 
 	const [ text, setText ] = useState('');
 	const [ year, setYear ] = useState('2014');
@@ -47,7 +46,7 @@ function Input({ setData, type, setType }) {
 		}
 
 		const fetchSuggestions = async ()=>{
-			const response = await fetch(`https://www.dnd5eapi.co/graphql/${year}`, {
+			const response = await fetch(`${URL}/graphql/${year}`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body : JSON.stringify({
@@ -73,7 +72,7 @@ function Input({ setData, type, setType }) {
 			return;
 		}
 
-		const dataURL = `${url}${year}/${type}/${text}`;
+		const dataURL = `${URL}/api/${year}/${type}/${text}`;
 		// console.log(dataURL);
 
 		try {
@@ -91,7 +90,7 @@ function Input({ setData, type, setType }) {
 			if(!Object.keys(graphQLMap).includes(type)) {
 				response = await fetch(dataURL);
 			} else {
-				response = await fetch(`https://www.dnd5eapi.co/graphql/${year}`, {
+				response = await fetch(`${URL}/graphql/${year}`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body : JSON.stringify({
@@ -129,7 +128,8 @@ function Input({ setData, type, setType }) {
 			<form onSubmit={fetchData}>
 				<label>
 					<span>
-						{url}
+						{URL}
+						/
 						<select onChange={(e)=>{setYear(e.target.value)}}>
 							{years.map((year, index)=>{ return <option key={index}>{year}</option>;})}
 						</select>
