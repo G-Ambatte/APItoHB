@@ -18,15 +18,16 @@ This project aims to provide a simple interface for fetching data from [**D&D 5e
 
 ## Progress
 
+**NB:** Due to an upstream API change, some formats are no longer functioning correctly.
+
 Formats:
-- [x] Monsters
+- [ ] Monsters
 - [x] Spells
 - [x] Feats
 - [x] Magic Items
 - [x] Races
-  - [x] Traits - ~~requires fetching additional data~~ solved by GraphQL
-    - [ ] Dragonborn *Draconic Ancestry*
-- [ ] Sub-Races
-- [x] Classes
+  - [ ] Dragonborn *Draconic Ancestry* table?
+- [x] Sub-Races
+- [ ] Classes
 - [ ] Subclasses
 - [x] ~~NPCs~~ (NPCs are included in Monster data)
