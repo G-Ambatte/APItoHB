@@ -19,7 +19,8 @@ import { classQuery, classSuggestionsQuery } from '../types/classes';
 const URL = 'https://www.dnd5eapi.co';
 
 function Input({ setData, type, setType }) {
-	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races', 'subraces', 'classes' ];
+	// const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races', 'subraces', 'classes' ];
+	const types = [ 'spells', 'feats', 'magic-items', 'races', 'subraces' ];
 	// const years = [ '2014', '2024'];
 	const years = [ '2014' ]; // Only 2014 for now
 
