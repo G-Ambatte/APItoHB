@@ -1,7 +1,7 @@
 import dedent from 'dedent';
 import _ from 'lodash';
 
-const magicItemQuery = `query MagicItemQuery($index: String) {
+const magicItemQuery = `query MagicItemQuery($index: String!) {
   magicItem(index: $index) {
     name
     desc

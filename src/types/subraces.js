@@ -2,7 +2,7 @@ import dedent from 'dedent';
 import _ from 'lodash';
 
 
-const subRaceQuery = `query Subrace($index: String) {
+const subRaceQuery = `query Subrace($index: String!) {
   subrace(index: $index) {
     name
     desc

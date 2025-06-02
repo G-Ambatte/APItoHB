@@ -2,7 +2,7 @@ import dedent from 'dedent';
 import _ from 'lodash';
 
 
-const raceQuery = `query RaceQuery($index: String) {
+const raceQuery = `query Race($index: String!) {
   race(index: $index) {
     name
     ability_bonuses {

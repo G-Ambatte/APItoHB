@@ -2,7 +2,7 @@ import dedent from 'dedent';
 import _ from 'lodash';
 
 
-const spellQuery = `query Spell ($index: String) {
+const spellQuery = `query Spell ($index: String!) {
   spell(index: $index) {
     name
     level

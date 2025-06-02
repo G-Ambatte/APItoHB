@@ -1,7 +1,7 @@
 import dedent from 'dedent';
 import _ from 'lodash';
 
-const featQuery = `query FeatQuery($index: String) {
+const featQuery = `query Feat($index: String!) {
   feat(index: $index) {
     name
     prerequisites {
@@ -20,19 +20,19 @@ const featSuggestionsQuery = `query Feats {
   }
 }`;
 
+const featStructure = {
+	name: '',
+	prerequisites: [],
+	desc: []
+};
+
 const featFormat = function(responseData) {
 
 	if(!responseData?.data?.feat) return;
 	const data = responseData.data.feat;
 	if(responseData.data?.srdAttrib){ data.srdAttrib = responseData.data.srdAttrib};
 
-	const featDefaults = {
-		name: 'Unnamed Feat',
-		prerequisites : [],
-		desc: [],
-	};
-
-	_.defaultsDeep(data, featDefaults);
+	_.defaultsDeep(data, featStructure);
 
 	const output = dedent`
 	### ${data.name}
@@ -46,4 +46,4 @@ const featFormat = function(responseData) {
 }
 
 
-export { featFormat, featQuery, featSuggestionsQuery }
+export { featFormat, featQuery, featSuggestionsQuery, featStructure }
