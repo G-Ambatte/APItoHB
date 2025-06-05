@@ -21,7 +21,7 @@ This project aims to provide a simple interface for fetching data from [**D&D 5e
 **NB:** Due to an upstream API change, some formats are no longer functioning correctly.
 
 Formats:
-- [ ] Monsters
+- [x] Monsters
 - [x] Spells
 - [x] Feats
 - [x] Magic Items

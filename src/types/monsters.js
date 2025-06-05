@@ -2,26 +2,37 @@ import dedent from 'dedent';
 import _ from 'lodash';
 
 
-const monsterQuery = `query MonsterQuery($index: String) {
+const monsterQuery = `query MonsterQuery($index: String!) {
   monster(index: $index) {
     name
     size
     type
+    subtype
     alignment
     armor_class {
-      value
-      type
+      ... on ArmorClassDex {
+        type
+        value
+      }
+      ... on ArmorClassNatural {
+        type
+        value
+      }
+      ... on ArmorClassArmor {
+        type
+        value
+      }
+      ... on ArmorClassSpell {
+        type
+        value
+      }
+      ... on ArmorClassCondition {
+        type
+        value
+      }
     }
     hit_points
     hit_points_roll
-    speed {
-      walk
-      fly
-      hover
-      swim
-      climb
-      burrow
-    }
     strength
     dexterity
     constitution
@@ -30,35 +41,57 @@ const monsterQuery = `query MonsterQuery($index: String) {
     charisma
     proficiencies {
       proficiency {
-        index
         name
+        type
+        index
+        reference {
+          ... on Equipment {
+            name
+          }
+          ... on EquipmentCategory {
+            name
+          }
+          ... on AbilityScore {
+            name
+            full_name
+          }
+          ... on Skill {
+            name
+          }
+        }
       }
       value
     }
-    damage_vulnerabilities
-    damage_resistances
-    damage_immunities
-    condition_immunities {
-      name
-    }
     senses {
-      passive_perception
-      darkvision
       blindsight
+      darkvision
+      passive_perception
       tremorsense
       truesight
     }
-    languages
+    speed {
+      burrow
+      climb
+      fly
+      hover
+      swim
+      walk
+    }
+    xp    
     challenge_rating
-    xp
-    proficiency_bonus
-
-    special_abilities {
+    condition_immunities {
       name
-      usage {
-        times
-        type
-      }
+      desc
+    }
+    damage_immunities
+    damage_resistances
+    damage_vulnerabilities
+    forms {
+      name
+    }
+    languages
+    reactions {
+      name
       desc
     }
     actions {
@@ -68,6 +101,35 @@ const monsterQuery = `query MonsterQuery($index: String) {
     legendary_actions {
       name
       desc
+    }
+    special_abilities {
+      name
+      desc
+      usage {
+        type
+        times
+        rest_types
+      }
+      spellcasting {
+        level
+        ability {
+          full_name
+        }
+        dc
+        modifier
+        components_required
+        school
+        spells {
+          spell {
+            name
+            desc
+          }
+        }
+        slots {
+          slot_level
+          count
+        }
+      }
     }
     image
   }
@@ -139,7 +201,7 @@ const monsterFormat = function(responseData, url) {
 	|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|
 	|${data.strength} ($[signed(${Math.floor((data.strength - 10) / 2)})])|${data.dexterity} ($[signed(${Math.floor((data.dexterity - 10) / 2)})])|${data.constitution} ($[signed(${Math.floor((data.constitution - 10) / 2)})])|${data.intelligence} ($[signed(${Math.floor((data.intelligence - 10) / 2)})])|${data.wisdom} ($[signed(${Math.floor((data.wisdom - 10) / 2)})])|${data.charisma} ($[signed(${Math.floor((data.charisma - 10) / 2)})])|
 	___
-	**Saving Throws**          :: ${data.proficiencies.filter((prof)=>{return prof.proficiency.index.startsWith('saving-throw');}).map((prof)=>{ return `${prof.proficiency.name?.slice(-3)} $[signed(${prof.value})]`;}).join(', ') || 'None'}
+	**Saving Throws**          :: ${data.proficiencies.filter((prof)=>{return prof.proficiency.index.startsWith('saving-throw');}).map((prof)=>{ return `${prof.proficiency.reference.full_name || prof.proficiency.name} $[signed(${prof.value})]`;}).join(', ') || 'None'}
 	**Skills**                 :: ${data.proficiencies.filter((prof)=>{return !prof.proficiency.index.startsWith('saving-throw');}).map((prof)=>{ return `${prof.proficiency.name?.slice(7)} $[signed(${prof.value})]`;}).join(', ') || 'None'}
 	**Damage Vulnerabilities** :: ${data.damage_vulnerabilities?.length ? data.damage_vulnerabilities.join(', ') : 'None'}
 	**Damage Resistances**     :: ${data.damage_resistances?.length ? data.damage_resistances.join(', ') : 'None'}
@@ -162,6 +224,12 @@ const monsterFormat = function(responseData, url) {
 	`:
 	### Actions
 	${data.actions.map((action)=>{return `***${action.name}.*** ${action.desc}`}).join('\n:\n')}`
+	: ''
+	}
+	${data.actions?.length ? 
+	`:
+	### Reactions
+	${data.reactions.map((reaction)=>{return `***${reaction.name}.*** ${reaction.desc}`}).join('\n:\n')}`
 	: ''
 	}
 	${data.legendary_actions?.length ?
