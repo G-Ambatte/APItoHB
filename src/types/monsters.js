@@ -226,7 +226,7 @@ const monsterFormat = function(responseData, url) {
 	${data.actions.map((action)=>{return `***${action.name}.*** ${action.desc}`}).join('\n:\n')}`
 	: ''
 	}
-	${data.actions?.length ? 
+	${data.reactions?.length ? 
 	`:
 	### Reactions
 	${data.reactions.map((reaction)=>{return `***${reaction.name}.*** ${reaction.desc}`}).join('\n:\n')}`
