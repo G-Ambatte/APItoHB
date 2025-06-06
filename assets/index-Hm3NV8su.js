@@ -392,7 +392,7 @@ ${h.srdAttrib}
 	${c.actions.map(H=>`***${H.name}.*** ${H.desc}`).join(`
 :
 `)}`:""}
-	${(z=c.actions)!=null&&z.length?`:
+	${(z=c.reactions)!=null&&z.length?`:
 	### Reactions
 	${c.reactions.map(H=>`***${H.name}.*** ${H.desc}`).join(`
 :
