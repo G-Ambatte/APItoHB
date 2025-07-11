@@ -448,7 +448,7 @@ ${c.srdAttrib}
 {{descriptive
 ${h.srdAttrib}
 }}`:""}
-  `},TE=`query Class ($index: String ) {
+  `},TE=`query Class ($index: String! ) {
   class(index: $index) {
     name
     hit_die
@@ -473,71 +473,47 @@ ${h.srdAttrib}
         desc
       }
       class_specific {
-        ... on BarbarianSpecific {
-          rage_count
-          rage_damage_bonus
-          brutal_critical_dice
+        action_surges
+        arcane_recovery_levels
+        aura_range
+        bardic_inspiration_die
+        brutal_critical_dice
+        channel_divinity_charges
+        creating_spell_slots {
+          sorcery_point_cost
+          spell_slot_level
         }
-        ... on BardSpecific {
-          bardic_inspiration_die
-          song_of_rest_die
-          magical_secrets_max_5
-          magical_secrets_max_7
-          magical_secrets_max_9
+        destroy_undead_cr
+        extra_attacks
+        favored_enemies
+        favored_terrain
+        indomitable_uses
+        invocations_known
+        ki_points
+        magical_secrets_max_5
+        magical_secrets_max_7
+        magical_secrets_max_9
+        martial_arts {
+          dice_count
+          dice_value
         }
-        ... on ClericSpecific {
-          channel_divinity_charges
-          destroy_undead_cr
+        metamagic_known
+        mystic_arcanum_level_6
+        mystic_arcanum_level_7
+        mystic_arcanum_level_8
+        mystic_arcanum_level_9
+        rage_count
+        rage_damage_bonus
+        sneak_attack {
+          dice_count
+          dice_value
         }
-        ... on DruidSpecific {
-          wild_shape_max_cr
-          wild_shape_swim
-          wild_shape_fly
-        }
-        ... on FighterSpecific {
-          action_surges
-          indomitable_uses
-          extra_attacks
-        }
-        ... on MonkSpecific {
-          martial_arts {
-            dice_count
-            dice_value
-          }
-          ki_points
-          unarmored_movement
-        }
-        ... on PaladinSpecific {
-          aura_range
-        }
-        ... on RangerSpecific {
-          favored_enemies
-          favored_terrain
-        }
-        ... on RogueSpecific {
-          sneak_attack {
-            dice_count
-            dice_value
-          }
-        }
-        ... on SorcererSpecific {
-          sorcery_points
-          metamagic_known
-          creating_spell_slots {
-            sorcery_point_cost
-            spell_slot_level
-          }
-        }
-        ... on WarlockSpecific {
-          invocations_known
-          mystic_arcanum_level_6
-          mystic_arcanum_level_7
-          mystic_arcanum_level_8
-          mystic_arcanum_level_9
-        }
-        ... on WizardSpecific {
-          arcane_recovery_levels
-        }
+        song_of_rest_die
+        sorcery_points
+        unarmored_movement
+        wild_shape_fly
+        wild_shape_max_cr
+        wild_shape_swim
       }
       subclass {
         name
@@ -557,7 +533,34 @@ ${h.srdAttrib}
     }
     starting_equipment {
       equipment {
-        name
+        ... on Armor {
+          name
+          desc
+        }
+        ... on Weapon {
+          name
+          desc
+        }
+        ... on Tool {
+          name
+          desc
+        }
+        ... on Gear {
+          name
+          desc
+        }
+        ... on Pack {
+          name
+          desc
+        }
+        ... on Ammunition {
+          name
+          desc
+        }
+        ... on Vehicle {
+          name
+          desc
+        }
       }
       quantity
     }
@@ -590,10 +593,10 @@ As a $[class_name], you gain the following features:
 
 ### Proficiencies
 
-**Armor:** :: ${h.proficiencies.filter(m=>m.type=="ARMOR").map(m=>m.name).join(", ")||"None"}
-**Weapons:** :: ${h.proficiencies.filter(m=>m.type=="WEAPONS").map(m=>m.name).join(", ")||"None"}
+**Armor:** :: ${h.proficiencies.filter(m=>m.type=="Armor").map(m=>m.name).join(", ")||"None"}
+**Weapons:** :: ${h.proficiencies.filter(m=>m.type=="Weapons").map(m=>m.name).join(", ")||"None"}
 **Tools:** :: ${h.proficiencies.filter(m=>m.type=="ARTISANS_TOOLS").map(m=>m.name).join(", ")||"None"}
-**Saving Throws:** :: ${h.proficiencies.filter(m=>m.type=="SAVING_THROWS").map(m=>m.reference.full_name).join(", ")||"None"}
+**Saving Throws:** :: ${h.proficiencies.filter(m=>m.type=="Saving Throws").map(m=>m.reference.full_name).join(", ")||"None"}
 **Skills:** :: ${h.proficiency_choices.map(m=>m.desc).join(" ")||"None"}
 
 ### Equipment
@@ -634,4 +637,4 @@ ${h.srdAttrib?`
 {{descriptive,wide
 ${h.srdAttrib}
 }}`:""}
-`},Td="https://www.dnd5eapi.co";function AE({setData:o,type:h,setType:c}){const v=["monsters","spells","feats","magic-items","races","subraces"],y=["2014"],[p,_]=oa.useState(["",""]),[R,m]=oa.useState(""),[O,x]=oa.useState("2014"),[D,U]=oa.useState(!0);oa.useEffect(()=>{const z={classes:EE,feats:dE,"magic-items":sE,monsters:mE,races:aE,spells:lE,subraces:SE};if(!Object.keys(z).includes(h)){console.log("Unknown type for suggestions"),_([]);return}(async()=>{const V=(await(await fetch(`${Td}/graphql/${O}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:z[h],variables:{limit:500}})})).json()).data[CO(h)].sort((W,se)=>W.index>se.index).map(W=>W.index);_(V)})(),o(),m("")},[h,O,o]);const K=async function(z){if(z.preventDefault(),!R){o(void 0);return}const F=`${Td}/api/${O}/${h}/${R}`;try{const H={classes:TE,feats:hE,"magic-items":oE,monsters:yE,races:rE,spells:iE,subraces:bE};let oe;if(Object.keys(H).includes(h)?oe=await fetch(`${Td}/graphql/${O}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:H[h],variables:{index:R}})}):oe=await fetch(F),!oe.ok)throw new Error(`Response status: ${oe.status}`);const V=await oe.json();if(D){const W={2014:"5.1",2024:"5.2"};V.data={...V.data,srdAttrib:cE(W[O])}}o(V);return}catch(H){console.error(H.message)}o(void 0)};return yt.jsx(yt.Fragment,{children:yt.jsx("div",{className:"input",children:yt.jsxs("form",{onSubmit:K,children:[yt.jsx("label",{children:yt.jsxs("span",{children:[Td,"/",yt.jsx("select",{onChange:z=>{x(z.target.value)},children:y.map((z,F)=>yt.jsx("option",{children:z},F))}),"/",yt.jsx("select",{onChange:z=>{c(z.target.value)},children:v.sort().map((z,F)=>yt.jsx("option",{children:z},F))}),"/",yt.jsx(FT,{Component:"input",value:R,onChange:z=>{m(z)},options:p,regex:/./,trigger:"",spacer:""})]})}),yt.jsx("input",{type:"submit",value:"Fetch"}),yt.jsx("label",{children:yt.jsxs("p",{children:["Include attribution?",yt.jsx("input",{type:"checkbox",defaultChecked:D,onChange:()=>{U(!D)}})]})})]})})})}function xE({data:o,type:h}){const[c,v]=oa.useState("homebrewery"),[y,p]=oa.useState(""),[_,R]=oa.useState(!1);if(oa.useEffect(()=>{R(!1)},[o]),oa.useEffect(()=>{if(!o)return;const x="https://www.dnd5eapi.co",D={monsters:_E,spells:fE,feats:pE,"magic-items":vE,races:uE,subraces:OE,classes:RE};c=="homebrewery"&&p(D[h]?D[h](o,x):""),c=="raw"&&p(JSON.stringify(o)),R(!1)},[c,h,o]),!o)return;const m=function(){navigator.clipboard.writeText(y),R(!0)},O=["Homebrewery","Raw"];return yt.jsx(yt.Fragment,{children:yt.jsxs("div",{className:"result",children:[yt.jsx("div",{className:"tabs",children:O.map((x,D)=>yt.jsx("button",{onClick:()=>{v(x.toLowerCase())},children:x},D))}),yt.jsx("textarea",{className:"result",defaultValue:y}),yt.jsx("button",{onClick:m,children:_?"Copied!":"Copy"})]})})}function wE(){const[o,h]=oa.useState(),[c,v]=oa.useState("classes");return yt.jsxs("div",{className:"App",children:[yt.jsx(OO,{}),yt.jsxs("div",{children:[yt.jsx("a",{href:"https://homebrewery.naturalcrit.com/new",children:"The Homebrewery - New Page"}),yt.jsx(AE,{setData:h,type:c,setType:v}),yt.jsx(xE,{data:o,type:c})]})]})}SO.createRoot(document.getElementById("root")).render(yt.jsx(oa.StrictMode,{children:yt.jsx(wE,{})}));
+`},Td="https://www.dnd5eapi.co";function AE({setData:o,type:h,setType:c}){const v=["monsters","spells","feats","magic-items","races","subraces","classes"],y=["2014"],[p,_]=oa.useState(["",""]),[R,m]=oa.useState(""),[O,x]=oa.useState("2014"),[D,U]=oa.useState(!0);oa.useEffect(()=>{const z={classes:EE,feats:dE,"magic-items":sE,monsters:mE,races:aE,spells:lE,subraces:SE};if(!Object.keys(z).includes(h)){console.log("Unknown type for suggestions"),_([]);return}(async()=>{const V=(await(await fetch(`${Td}/graphql/${O}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:z[h],variables:{limit:500}})})).json()).data[CO(h)].sort((W,se)=>W.index>se.index).map(W=>W.index);_(V)})(),o(),m("")},[h,O,o]);const K=async function(z){if(z.preventDefault(),!R){o(void 0);return}const F=`${Td}/api/${O}/${h}/${R}`;try{const H={classes:TE,feats:hE,"magic-items":oE,monsters:yE,races:rE,spells:iE,subraces:bE};let oe;if(Object.keys(H).includes(h)?oe=await fetch(`${Td}/graphql/${O}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:H[h],variables:{index:R}})}):oe=await fetch(F),!oe.ok)throw new Error(`Response status: ${oe.status}`);const V=await oe.json();if(D){const W={2014:"5.1",2024:"5.2"};V.data={...V.data,srdAttrib:cE(W[O])}}o(V);return}catch(H){console.error(H.message)}o(void 0)};return yt.jsx(yt.Fragment,{children:yt.jsx("div",{className:"input",children:yt.jsxs("form",{onSubmit:K,children:[yt.jsx("label",{children:yt.jsxs("span",{children:[Td,"/",yt.jsx("select",{onChange:z=>{x(z.target.value)},children:y.map((z,F)=>yt.jsx("option",{children:z},F))}),"/",yt.jsx("select",{onChange:z=>{c(z.target.value)},children:v.sort().map((z,F)=>yt.jsx("option",{children:z},F))}),"/",yt.jsx(FT,{Component:"input",value:R,onChange:z=>{m(z)},options:p,regex:/./,trigger:"",spacer:""})]})}),yt.jsx("input",{type:"submit",value:"Fetch"}),yt.jsx("label",{children:yt.jsxs("p",{children:["Include attribution?",yt.jsx("input",{type:"checkbox",defaultChecked:D,onChange:()=>{U(!D)}})]})})]})})})}function xE({data:o,type:h}){const[c,v]=oa.useState("homebrewery"),[y,p]=oa.useState(""),[_,R]=oa.useState(!1);if(oa.useEffect(()=>{R(!1)},[o]),oa.useEffect(()=>{if(!o)return;const x="https://www.dnd5eapi.co",D={monsters:_E,spells:fE,feats:pE,"magic-items":vE,races:uE,subraces:OE,classes:RE};c=="homebrewery"&&p(D[h]?D[h](o,x):""),c=="raw"&&p(JSON.stringify(o)),R(!1)},[c,h,o]),!o)return;const m=function(){navigator.clipboard.writeText(y),R(!0)},O=["Homebrewery","Raw"];return yt.jsx(yt.Fragment,{children:yt.jsxs("div",{className:"result",children:[yt.jsx("div",{className:"tabs",children:O.map((x,D)=>yt.jsx("button",{onClick:()=>{v(x.toLowerCase())},children:x},D))}),yt.jsx("textarea",{className:"result",defaultValue:y}),yt.jsx("button",{onClick:m,children:_?"Copied!":"Copy"})]})})}function wE(){const[o,h]=oa.useState(),[c,v]=oa.useState("classes");return yt.jsxs("div",{className:"App",children:[yt.jsx(OO,{}),yt.jsxs("div",{children:[yt.jsx("a",{href:"https://homebrewery.naturalcrit.com/new",children:"The Homebrewery - New Page"}),yt.jsx(AE,{setData:h,type:c,setType:v}),yt.jsx(xE,{data:o,type:c})]})]})}SO.createRoot(document.getElementById("root")).render(yt.jsx(oa.StrictMode,{children:yt.jsx(wE,{})}));
