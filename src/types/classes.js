@@ -2,7 +2,7 @@ import dedent from 'dedent';
 import _ from 'lodash';
 
 
-const classQuery = `query Class ($index: String ) {
+const classQuery = `query Class ($index: String! ) {
   class(index: $index) {
     name
     hit_die
@@ -27,71 +27,47 @@ const classQuery = `query Class ($index: String ) {
         desc
       }
       class_specific {
-        ... on BarbarianSpecific {
-          rage_count
-          rage_damage_bonus
-          brutal_critical_dice
+        action_surges
+        arcane_recovery_levels
+        aura_range
+        bardic_inspiration_die
+        brutal_critical_dice
+        channel_divinity_charges
+        creating_spell_slots {
+          sorcery_point_cost
+          spell_slot_level
         }
-        ... on BardSpecific {
-          bardic_inspiration_die
-          song_of_rest_die
-          magical_secrets_max_5
-          magical_secrets_max_7
-          magical_secrets_max_9
+        destroy_undead_cr
+        extra_attacks
+        favored_enemies
+        favored_terrain
+        indomitable_uses
+        invocations_known
+        ki_points
+        magical_secrets_max_5
+        magical_secrets_max_7
+        magical_secrets_max_9
+        martial_arts {
+          dice_count
+          dice_value
         }
-        ... on ClericSpecific {
-          channel_divinity_charges
-          destroy_undead_cr
+        metamagic_known
+        mystic_arcanum_level_6
+        mystic_arcanum_level_7
+        mystic_arcanum_level_8
+        mystic_arcanum_level_9
+        rage_count
+        rage_damage_bonus
+        sneak_attack {
+          dice_count
+          dice_value
         }
-        ... on DruidSpecific {
-          wild_shape_max_cr
-          wild_shape_swim
-          wild_shape_fly
-        }
-        ... on FighterSpecific {
-          action_surges
-          indomitable_uses
-          extra_attacks
-        }
-        ... on MonkSpecific {
-          martial_arts {
-            dice_count
-            dice_value
-          }
-          ki_points
-          unarmored_movement
-        }
-        ... on PaladinSpecific {
-          aura_range
-        }
-        ... on RangerSpecific {
-          favored_enemies
-          favored_terrain
-        }
-        ... on RogueSpecific {
-          sneak_attack {
-            dice_count
-            dice_value
-          }
-        }
-        ... on SorcererSpecific {
-          sorcery_points
-          metamagic_known
-          creating_spell_slots {
-            sorcery_point_cost
-            spell_slot_level
-          }
-        }
-        ... on WarlockSpecific {
-          invocations_known
-          mystic_arcanum_level_6
-          mystic_arcanum_level_7
-          mystic_arcanum_level_8
-          mystic_arcanum_level_9
-        }
-        ... on WizardSpecific {
-          arcane_recovery_levels
-        }
+        song_of_rest_die
+        sorcery_points
+        unarmored_movement
+        wild_shape_fly
+        wild_shape_max_cr
+        wild_shape_swim
       }
       subclass {
         name
@@ -111,7 +87,34 @@ const classQuery = `query Class ($index: String ) {
     }
     starting_equipment {
       equipment {
-        name
+        ... on Armor {
+          name
+          desc
+        }
+        ... on Weapon {
+          name
+          desc
+        }
+        ... on Tool {
+          name
+          desc
+        }
+        ... on Gear {
+          name
+          desc
+        }
+        ... on Pack {
+          name
+          desc
+        }
+        ... on Ammunition {
+          name
+          desc
+        }
+        ... on Vehicle {
+          name
+          desc
+        }
       }
       quantity
     }
@@ -159,10 +162,10 @@ As a $[class_name], you gain the following features:
 
 ### Proficiencies
 
-**Armor:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'ARMOR';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
-**Weapons:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'WEAPONS';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
+**Armor:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'Armor';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
+**Weapons:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'Weapons';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
 **Tools:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'ARTISANS_TOOLS';}).map((prof)=>{return prof.name;}).join(', ') || 'None'}
-**Saving Throws:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'SAVING_THROWS';}).map((prof)=>{return prof.reference.full_name;}).join(', ') || 'None'}
+**Saving Throws:** :: ${data.proficiencies.filter((prof)=>{return prof.type == 'Saving Throws';}).map((prof)=>{return prof.reference.full_name;}).join(', ') || 'None'}
 **Skills:** :: ${data.proficiency_choices.map((prof_choice)=>{return prof_choice.desc}).join(' ') || 'None'}
 
 ### Equipment
