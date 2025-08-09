@@ -130,6 +130,41 @@ const classSuggestionsQuery = `query Classes {
 	}
 }`;
 
+const classSpecificFeatData = {
+  "action_surges": {title: 'Action Surges'},
+  "arcane_recovery_levels": {title: 'Arcane Recovery Levels'},
+  "aura_range": {title: 'Aura Range', suffix: 'ft'},
+  "bardic_inspiration_die": {title: 'Bardic Inspiration Die', prefix: '1d'},
+  "brutal_critical_dice": {title: 'Brutal Critical Die', prefix: '1d'},
+  "channel_divinity_charges": {title: 'Channel Divinity Charges'},
+  "creating_spell_slots": {title: 'Creating Spell Slots'},
+  "destroy_undead_cr": {title: 'Destroy Undead CR'},
+  "extra_attacks": {title: 'Extra Attacks'},
+  "favored_enemies": {title: 'Favored Enemies'},
+  "favored_terrain": {title: 'Favored Terrain'},
+  "indomitable_uses": {title: 'Indomitable Uses'},
+  "invocations_known": {title: 'Invocations Known'},
+  "ki_points": {title: 'Ki Points'},
+  "magical_secrets_max_5": {title: 'Magical Secrets (5)'},
+  "magical_secrets_max_7": {title: 'Magical Secrets (7)'},
+  "magical_secrets_max_9": {title: 'Magical Secrets (9)'},
+  "martial_arts": {title: 'Martial Arts'},
+  "metamagic_known": {title: 'Metamagic Known'},
+  "mystic_arcanum_level_6": {title: 'Mystic Arcanum (level 6)'},
+  "mystic_arcanum_level_7": {title: 'Mystic Arcanum (level 7)'},
+  "mystic_arcanum_level_8": {title: 'Mystic Arcanum (level 8)'},
+  "mystic_arcanum_level_9": {title: 'Mystic Arcanum (level 9)'},
+  "rage_count": {title: 'Rage Count'},
+  "rage_damage_bonus": {title: 'Rage Damage Bonus'},
+  "sneak_attack": {title: 'Sneak Attack'},
+  "song_of_rest_die": {title: 'Song of Rest Die', prefix: '1d'},
+  "sorcery_points": {title: 'Sorcery Points'},
+  "unarmored_movement": {title: 'Unarmored Movement'},
+  "wild_shape_fly": {title: 'Wild Shape (fly)'},
+  "wild_shape_max_cr": {title: 'Wild Shape Max CR'},
+  "wild_shape_swim": {title: 'Wild Shape (swim)'}
+};
+
 const classFormat = function(responseData) {
 
   if(!responseData?.data?.class) return;
@@ -140,6 +175,14 @@ const classFormat = function(responseData) {
 	};
 
 	_.defaultsDeep(data, classDefaults);
+
+  const maxLevel = data.class_levels.filter((level)=>{return level.level == 20})[0];
+
+  const isCaster = (data.class_levels.filter((level)=>{return level.level == 20 && level.spellcasting}).length);
+  const isFullCaster = (maxLevel.spellcasting?.spell_slots_level_9);
+  const classSpecificFeatures = Object.keys(maxLevel.class_specific).filter((classSpecificKey)=>{
+        return maxLevel.class_specific[classSpecificKey];
+      });
 
 	const output = dedent`
 
@@ -178,15 +221,34 @@ ${data.starting_equipment.map((equip)=>{return `- ${equip.quantity}x ${equip.equ
 {{classTable,frame,wide
 ###### $[class_name]
 
-| Level | Proficiency Bonus | Features |${data.class_levels.filter((level)=>{return level.level == 20 && level.spellcasting}).length ? ` Cantrips Known | 1 | 2 | 3 | 4 | 5 |${data.class_levels.filter((level)=>{return level.level == 20})[0].spellcasting?.spell_slots_level_9 ? ' 6 | 7 | 8 | 9 |' : ''}` : '' }
-|:-----:|:-----------------:|:---------|${data.class_levels.filter((level)=>{return level.level == 20 && level.spellcasting}).length ? `:-:|:-:|:-:|:-:|:-:|:-:|${data.class_levels.filter((level)=>{return level.level == 20})[0].spellcasting?.spell_slots_level_9 ? ':-:|:-:|:-:|:-:|' : ''}` : '' }
+| Level | Proficiency Bonus | Features | ${classSpecificFeatures.map((csFeat)=>{return classSpecificFeatData[csFeat].title;}).join(' | ')} | ${isCaster ? `Cantrips Known | 1 | 2 | 3 | 4 | 5 |${isFullCaster ? ' 6 | 7 | 8 | 9 |' : ''}` : '' }
+|:-----:|:-----------------:|:---------|:${classSpecificFeatures.map((csFeat)=>{return classSpecificFeatData[csFeat].title.replace(/./g, '-');}).join(':|:')}:|${isCaster ? `:-:|:-:|:-:|:-:|:-:|:-:|${isFullCaster ? ':-:|:-:|:-:|:-:|' : ''}` : '' }
 ${data.class_levels
     .filter((level)=>{
       return !level.subclass;
     })
     .sort((a,b)=>{return a.level > b.level})
     .map((level)=>{
-      return `| ${level.level} | ${level.prof_bonus} | ${level.features.map((feature)=>{return feature.name;}).join(', ')} | ${level.spellcasting ? `${level.spellcasting.cantrips_known || '-'} | ${level.spellcasting.spell_slots_level_1 || '-'} | ${level.spellcasting.spell_slots_level_2 || '-'} | ${level.spellcasting.spell_slots_level_3 || '-'} | ${level.spellcasting.spell_slots_level_4 || '-'} | ${level.spellcasting.spell_slots_level_5 || '-'} | ${level.spellcasting.spell_slots_level_6 || '-'} | ${level.spellcasting.spell_slots_level_7 || '-'} | ${level.spellcasting.spell_slots_level_8 || '-'} | ${level.spellcasting.spell_slots_level_9 || '-'} |` : ''}`;
+      const levelData = [];
+      levelData.push(level.level);
+      levelData.push(level.prof_bonus);
+      levelData.push(level.features.map((feature)=>{return feature.name;}).join(', '));
+      levelData.push(classSpecificFeatures.map((csFeat)=>{return `${classSpecificFeatData[csFeat].prefix || ''}${level.class_specific[csFeat]}${classSpecificFeatData[csFeat].suffix || ''}`;}).join(' | '));
+      if(isCaster){
+        levelData.push(level.spellcasting.cantrips_known || '-');
+        levelData.push(level.spellcasting.spell_slots_level_1 || '-');
+        levelData.push(level.spellcasting.spell_slots_level_2 || '-');
+        levelData.push(level.spellcasting.spell_slots_level_3 || '-');
+        levelData.push(level.spellcasting.spell_slots_level_4 || '-');
+        levelData.push(level.spellcasting.spell_slots_level_5 || '-');
+        if(isFullCaster){
+          levelData.push(level.spellcasting.spell_slots_level_6 || '-');
+          levelData.push(level.spellcasting.spell_slots_level_7 || '-');
+          levelData.push(level.spellcasting.spell_slots_level_8 || '-');
+          levelData.push(level.spellcasting.spell_slots_level_9 || '-');
+        }
+      }
+      return `| ${levelData.join(' | ')} |`;
     })
     .join('  \n')}
 }}
