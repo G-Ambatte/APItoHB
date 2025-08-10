@@ -137,7 +137,6 @@ const classSpecificFeatData = {
   "bardic_inspiration_die": {title: 'Bardic Inspiration Die', prefix: '1d'},
   "brutal_critical_dice": {title: 'Brutal Critical Die', prefix: '1d'},
   "channel_divinity_charges": {title: 'Channel Divinity Charges'},
-  "creating_spell_slots": {title: 'Creating Spell Slots'},
   "destroy_undead_cr": {title: 'Destroy Undead CR'},
   "extra_attacks": {title: 'Extra Attacks'},
   "favored_enemies": {title: 'Favored Enemies'},
@@ -145,24 +144,15 @@ const classSpecificFeatData = {
   "indomitable_uses": {title: 'Indomitable Uses'},
   "invocations_known": {title: 'Invocations Known'},
   "ki_points": {title: 'Ki Points'},
-  "magical_secrets_max_5": {title: 'Magical Secrets (5)'},
-  "magical_secrets_max_7": {title: 'Magical Secrets (7)'},
-  "magical_secrets_max_9": {title: 'Magical Secrets (9)'},
   "martial_arts": {title: 'Martial Arts'},
   "metamagic_known": {title: 'Metamagic Known'},
-  "mystic_arcanum_level_6": {title: 'Mystic Arcanum (level 6)'},
-  "mystic_arcanum_level_7": {title: 'Mystic Arcanum (level 7)'},
-  "mystic_arcanum_level_8": {title: 'Mystic Arcanum (level 8)'},
-  "mystic_arcanum_level_9": {title: 'Mystic Arcanum (level 9)'},
   "rage_count": {title: 'Rage Count'},
   "rage_damage_bonus": {title: 'Rage Damage Bonus'},
   "sneak_attack": {title: 'Sneak Attack'},
   "song_of_rest_die": {title: 'Song of Rest Die', prefix: '1d'},
   "sorcery_points": {title: 'Sorcery Points'},
-  "unarmored_movement": {title: 'Unarmored Movement'},
-  "wild_shape_fly": {title: 'Wild Shape (fly)'},
-  "wild_shape_max_cr": {title: 'Wild Shape Max CR'},
-  "wild_shape_swim": {title: 'Wild Shape (swim)'}
+  "unarmored_movement": {title: 'Unarmored Movement', prefix: '+', suffix: 'ft'},
+  "wild_shape_max_cr": {title: 'Wild Shape Max CR'}
 };
 
 const classFormat = function(responseData) {
@@ -180,8 +170,9 @@ const classFormat = function(responseData) {
 
   const isCaster = (data.class_levels.filter((level)=>{return level.level == 20 && level.spellcasting}).length);
   const isFullCaster = (maxLevel.spellcasting?.spell_slots_level_9);
+  const hasCantrips = (maxLevel.spellcasting?.cantrips_known);
   const classSpecificFeatures = Object.keys(maxLevel.class_specific).filter((classSpecificKey)=>{
-        return maxLevel.class_specific[classSpecificKey];
+        return Object.keys(classSpecificFeatData).includes(classSpecificKey) && maxLevel.class_specific[classSpecificKey];
       });
 
 	const output = dedent`
@@ -221,8 +212,8 @@ ${data.starting_equipment.map((equip)=>{return `- ${equip.quantity}x ${equip.equ
 {{classTable,frame,wide
 ###### $[class_name]
 
-| Level | Proficiency Bonus | Features | ${classSpecificFeatures.map((csFeat)=>{return classSpecificFeatData[csFeat].title;}).join(' | ')} | ${isCaster ? `Cantrips Known | 1 | 2 | 3 | 4 | 5 |${isFullCaster ? ' 6 | 7 | 8 | 9 |' : ''}` : '' }
-|:-----:|:-----------------:|:---------|:${classSpecificFeatures.map((csFeat)=>{return classSpecificFeatData[csFeat].title.replace(/./g, '-');}).join(':|:')}:|${isCaster ? `:-:|:-:|:-:|:-:|:-:|:-:|${isFullCaster ? ':-:|:-:|:-:|:-:|' : ''}` : '' }
+| Level | Proficiency Bonus | Features | ${classSpecificFeatures.map((csFeat)=>{return classSpecificFeatData[csFeat].title;}).join(' | ')} | ${isCaster ? `${hasCantrips ? 'Cantrips Known | ': '' }1 | 2 | 3 | 4 | 5 |${isFullCaster ? ' 6 | 7 | 8 | 9 |' : ''}` : '' }
+|:-----:|:-----------------:|:---------|:${classSpecificFeatures.map((csFeat)=>{return classSpecificFeatData[csFeat].title.replace(/./g, '-');}).join(':|:')}:|${isCaster ? `${hasCantrips ? ':-:|': '' }:-:|:-:|:-:|:-:|:-:|${isFullCaster ? ':-:|:-:|:-:|:-:|' : ''}` : '' }
 ${data.class_levels
     .filter((level)=>{
       return !level.subclass;
@@ -233,14 +224,27 @@ ${data.class_levels
       levelData.push(level.level);
       levelData.push(level.prof_bonus);
       levelData.push(level.features.map((feature)=>{return feature.name;}).join(', '));
-      levelData.push(classSpecificFeatures.map((csFeat)=>{return `${classSpecificFeatData[csFeat].prefix || ''}${level.class_specific[csFeat]}${classSpecificFeatData[csFeat].suffix || ''}`;}).join(' | '));
+
+      levelData.push(classSpecificFeatures.map((csFeat)=>{
+        const featInfo = typeof level.class_specific[csFeat] == 'object'
+          ?
+          // Monk Martial Arts or Rogue Sneak Attack
+          `${level.class_specific[csFeat].dice_count}d${level.class_specific[csFeat].dice_value}`
+          :
+          level.class_specific[csFeat];
+
+        return `${classSpecificFeatData[csFeat].prefix || ''}${featInfo}${classSpecificFeatData[csFeat].suffix || ''}`;
+      }).join(' | '));
+
       if(isCaster){
-        levelData.push(level.spellcasting.cantrips_known || '-');
+        if(hasCantrips){ levelData.push(level.spellcasting.cantrips_known || '-'); };
+
         levelData.push(level.spellcasting.spell_slots_level_1 || '-');
         levelData.push(level.spellcasting.spell_slots_level_2 || '-');
         levelData.push(level.spellcasting.spell_slots_level_3 || '-');
         levelData.push(level.spellcasting.spell_slots_level_4 || '-');
         levelData.push(level.spellcasting.spell_slots_level_5 || '-');
+
         if(isFullCaster){
           levelData.push(level.spellcasting.spell_slots_level_6 || '-');
           levelData.push(level.spellcasting.spell_slots_level_7 || '-');
