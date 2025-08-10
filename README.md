@@ -28,6 +28,6 @@ Formats:
 - [x] Races
   - [ ] Dragonborn *Draconic Ancestry* table?
 - [x] Sub-Races
-- [ ] Classes
+- [x] Classes
 - [ ] Subclasses
 - [x] ~~NPCs~~ (NPCs are included in Monster data)
