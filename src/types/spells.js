@@ -67,7 +67,7 @@ const spellFormat = function(responseData) {
 	**Duration:** ${data.duration}
 	:
 	${data.desc.map((line)=>{ return line;}).join('  \n')}  
-	${data.higher_level.length ? 
+	${data.higher_level?.length ? 
 	`**At Higher Levels:** ${data.higher_level.map((upcast)=>{return upcast;}).join('  \n')}`
 	: ''
 	}
