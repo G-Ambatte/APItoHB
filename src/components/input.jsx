@@ -14,12 +14,13 @@ import { featQuery, featSuggestionsQuery } from '../types/feats';
 import { monsterQuery, monsterSuggestionsQuery } from '../types/monsters';
 import { subRaceQuery, subRaceSuggestionsQuery } from '../types/subraces';
 import { classQuery, classSuggestionsQuery } from '../types/classes';
+import { subClassQuery, subClassSuggestionsQuery } from '../types/subclasses';
 
 
 const URL = 'https://www.dnd5eapi.co';
 
 function Input({ setData, type, setType }) {
-	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races', 'subraces', 'classes' ];
+	const types = [ 'monsters', 'spells', 'feats', 'magic-items', 'races', 'subraces', 'classes', 'subclasses' ];
 	// const years = [ '2014', '2024'];
 	const years = [ '2014' ]; // Only 2014 for now
 
@@ -37,7 +38,8 @@ function Input({ setData, type, setType }) {
 			'monsters'    : monsterSuggestionsQuery,
 			'races'       : raceSuggestionsQuery,
 			'spells'      : spellSuggestionsQuery,
-			'subraces'    : subRaceSuggestionsQuery
+			'subraces'    : subRaceSuggestionsQuery,
+			'subclasses'  : subClassSuggestionsQuery
 		};
 		if(!Object.keys(suggestionsMap).includes(type)){
 			console.log('Unknown type for suggestions');
@@ -83,7 +85,8 @@ function Input({ setData, type, setType }) {
 				'monsters'    : monsterQuery,
 				'races'       : raceQuery,
 				'spells'      : spellQuery,
-				'subraces'    : subRaceQuery
+				'subraces'    : subRaceQuery,
+				'subclasses'  : subClassQuery
 			}
 
 			let response;
