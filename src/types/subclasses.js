@@ -104,7 +104,7 @@ const subClassFormat = function(responseData) {
       **Casting Time:** :: ${spell.spell.casting_time}
       **Range:** :: ${spell.spell.range}
       **Components:** :: ${spell.spell.components}
-      **Duration:** :: ${spell.spell.duration}
+      **Duration:** :: ${spell.spell.concentration ? `Concentration, ${spell.spell.duration.toLowerCase()}` : spell.spell.duration}
       :
       ${spell.spell.desc.join('  \n')}
       ${spell.spell.higher_level ? `\n**At Higher Levels.** ${spell.spell.higher_level}` : ''}
