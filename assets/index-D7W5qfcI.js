@@ -702,7 +702,7 @@ ${v.srdAttrib}
 :
 `)}
 
-  ${v.spells.length?qr`
+  ${v.spells?qr`
     \page
     
     ## Spells
