@@ -90,7 +90,7 @@ const subClassFormat = function(responseData) {
     `;})
     .join('\n:\n')}
 
-  ${data.spells.length ? dedent`
+  ${data.spells ? dedent`
     \page
     
     ## Spells
